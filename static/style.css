@@ -930,3 +930,14 @@ body.theme-light .text-tier-0 {
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4)) !important;
   object-fit: contain !important;
 }
+/* Smooth HTMX page transitions */
+#main-content {
+  opacity: 1;
+  transition: opacity 0.15s ease-in;
+}
+
+.htmx-swapping #main-content,
+#main-content.htmx-swapping {
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+}
