@@ -416,29 +416,55 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-  // 6. HABIT SCORE (REPLACING DISCIPLINE SCORE WITH 4 CORE HABITS)
+  // 6. HABIT SCORE (DYNAMICALLY CALCULATED FROM HABIT TRACKER DB)
   function renderHabitScore() {
-    const rawHabits = localStorage.getItem('edgecraft_habits') || localStorage.getItem('habits_data');
+    const rawHabits = localStorage.getItem('edgecraft_habits_db') || localStorage.getItem('edgecraft_habits') || '{}';
     let habitData = {};
-    if (rawHabits) {
-      try { habitData = JSON.parse(rawHabits); } catch (e) {}
+    try {
+      habitData = JSON.parse(rawHabits);
+    } catch (e) {
+      habitData = {};
     }
 
     const CRITICAL_HABITS = [
-      { name: 'Breathing 10 cycles', key: 'breathing', defaultPct: 95 },
-      { name: 'Mark Levels D→4H→1H', key: 'mark_levels', defaultPct: 100 },
-      { name: '1% risk per trade', key: 'risk_management', defaultPct: 100 },
-      { name: 'Step away after T1 loss', key: 'step_away', defaultPct: 85 }
+      { name: 'Breathing 10 cycles', keys: ['breathing', '0', 'breath'], defaultPct: 95 },
+      { name: 'Mark Levels D→4H→1H', keys: ['mark_levels', '1', 'levels'], defaultPct: 100 },
+      { name: '1% risk per trade', keys: ['risk_management', '2', 'risk'], defaultPct: 100 },
+      { name: 'Step away after T1 loss', keys: ['step_away', '3', 'step'], defaultPct: 85 }
     ];
 
-    let totalPct = 0;
+    const dates = Object.keys(habitData);
+    const hasData = dates.length > 0;
     const barsContainer = document.getElementById('habitBreakdownBars');
     if (barsContainer) barsContainer.innerHTML = '';
 
+    let totalPct = 0;
     let weakest = { name: '', pct: 101 };
 
-    CRITICAL_HABITS.forEach(h => {
-      const pct = h.defaultPct;
+    CRITICAL_HABITS.forEach((h, idx) => {
+      let completed = 0;
+      let totalLogged = 0;
+
+      if (hasData) {
+        dates.forEach(d => {
+          const dayRecord = habitData[d];
+          if (!dayRecord) return;
+
+          let val = dayRecord[idx] ?? dayRecord[h.keys[0]] ?? dayRecord[h.keys[1]] ?? dayRecord[h.keys[2]];
+          if (typeof dayRecord === 'object' && val === undefined) {
+            val = Object.values(dayRecord)[idx];
+          }
+
+          if (val === 'yes' || val === true || val === '✓' || val === 1) {
+            completed++;
+            totalLogged++;
+          } else if (val === 'no' || val === false || val === '✕' || val === 0) {
+            totalLogged++;
+          }
+        });
+      }
+
+      const pct = totalLogged > 0 ? Math.round((completed / totalLogged) * 100) : (hasData ? 0 : h.defaultPct);
       totalPct += pct;
 
       if (pct < weakest.pct) {
@@ -460,8 +486,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const score = Math.round(totalPct / CRITICAL_HABITS.length);
-    document.getElementById('habitScoreNum').textContent = score;
-    
+    const scoreNumEl = document.getElementById('habitScoreNum');
+    if (scoreNumEl) scoreNumEl.textContent = score;
+
     const ringEl = document.getElementById('habitScoreRing');
     if (ringEl) {
       ringEl.style.background = `conic-gradient(#10b981 0% ${score}%, var(--bg-inner) ${score}% 100%)`;
@@ -480,8 +507,10 @@ document.addEventListener('DOMContentLoaded', () => {
       msg = 'Process consistency is weakening. Focus on core habits.';
     }
 
-    document.getElementById('habitScoreTier').textContent = tier;
-    document.getElementById('habitScoreMessage').textContent = msg;
+    const tierEl = document.getElementById('habitScoreTier');
+    if (tierEl) tierEl.textContent = tier;
+    const msgEl = document.getElementById('habitScoreMessage');
+    if (msgEl) msgEl.textContent = msg;
 
     const weakEl = document.getElementById('weakestHabitText');
     if (weakEl) {
