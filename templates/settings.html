@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EdgeCraft - Settings</title>
+  <!-- INSTANT THEME LOADER -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('edgecraft_theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/settings.css">
+</head>
+<body>
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastNotification" class="toast-popup">
+    <span class="toast-icon">✓</span>
+    <span id="toastMessage" class="toast-msg">Settings saved successfully!</span>
+  </div>
+
+  <div class="dashboard-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <div class="logo-text">
+            <h2>EDGECRAFT</h2>
+            <p>Discipline Today, Freedom Tomorrow.</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="/" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/habits" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+          <span>Habit Tracker</span>
+        </a>
+        <a href="/tradeslog" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Trade Log</span>
+        </a>
+        <a href="/analytics" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics</span>
+        </a>
+        <a href="/psychology" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line></svg>
+          <span>Psychology</span>
+        </a>
+        <a href="/calendar" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Calendar</span>
+        </a>
+        <a href="/settings" class="nav-item active">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card-inner">
+          <div class="avatar-box">
+            <img src="/static/bull-3d.png" id="sidebarAvatarImg" alt="Avatar" class="avatar-thumb-mini">
+          </div>
+          <div class="user-details">
+            <div class="user-name">
+              <span id="sidebarUserName">JAGAN</span>
+              <span class="plan-badge">Pro Plan</span>
+            </div>
+            <span class="user-subtext">View Profile</span>
+          </div>
+        </div>
+        <div class="sidebar-bull-wrap">
+          <img src="/static/bull-3d.png" alt="Bull" class="bull-thumb">
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN SETTINGS CONTAINER -->
+    <main class="main-content settings-main">
+      <div class="settings-header">
+        <h1>Settings</h1>
+        <p class="subtitle">Manage your account, security and preferences.</p>
+      </div>
+
+      <div class="settings-layout-grid">
+        <!-- LEFT COLUMN: CONFIGURATION CARDS -->
+        <div class="settings-left-col">
+          
+          <!-- 1. PROFILE CARD -->
+          <section class="settings-card profile-card">
+            <div class="card-header-bar">
+              <div class="badge-step-title">
+                <span class="step-num-icon purple">👤 1</span>
+                <div>
+                  <h3>Profile</h3>
+                  <p>Manage your personal information and profile.</p>
+                </div>
+              </div>
+              <button type="button" class="btn-edit-profile" id="btnOpenEditModal">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Edit Profile
+              </button>
+            </div>
+
+            <div class="profile-details-row">
+              <div class="profile-avatar-uploader">
+                <div class="avatar-circle-wrap">
+                  <img src="/static/bull-3d.png" id="displayProfileAvatar" alt="User Avatar" class="profile-main-img">
+                  <label for="avatarFileInput" class="camera-upload-btn" title="Upload Profile Picture">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </label>
+                  <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
+                </div>
+              </div>
+
+              <div class="profile-fields-grid">
+                <div class="prof-item">
+                  <span class="prof-lbl">Full Name</span>
+                  <strong class="prof-val" id="profileFullName">JAGAN</strong>
+                </div>
+                <div class="prof-item">
+                  <span class="prof-lbl">Username</span>
+                  <strong class="prof-val" id="profileUsername">YADAV</strong>
+                </div>
+                <div class="prof-item">
+                  <span class="prof-lbl">Email</span>
+                  <strong class="prof-val" id="profileEmail">jagany600@gmail.com</strong>
+                </div>
+                <div class="prof-item">
+                  <span class="prof-lbl">Timezone</span>
+                  <strong class="prof-val" id="profileTimezone">America/New_York (EST)</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. ACCOUNT & SECURITY CARD -->
+          <section class="settings-card">
+            <div class="badge-step-title">
+              <span class="step-num-icon green">🛡️ 2</span>
+              <div>
+                <h3>Account & Security</h3>
+                <p>Update your password and secure your account.</p>
+              </div>
+            </div>
+
+            <div class="security-items-grid">
+              <!-- Change Password -->
+              <div class="security-card-item" id="btnChangePassword">
+                <div class="sec-left">
+                  <span class="sec-icon teal">🔑</span>
+                  <div>
+                    <h4>Change Password</h4>
+                    <p>Update your account password</p>
+                  </div>
+                </div>
+                <span class="sec-arrow">›</span>
+              </div>
+
+              <!-- Google Account Connection -->
+              <div class="security-card-item" id="btnGoogleAuth">
+                <div class="sec-left">
+                  <span class="sec-icon green">G</span>
+                  <div>
+                    <h4>Google Account</h4>
+                    <p id="googleStatusText">Connected</p>
+                  </div>
+                </div>
+                <div class="sec-right-status">
+                  <span class="status-check-badge">✓</span>
+                  <span class="sec-arrow">›</span>
+                </div>
+              </div>
+
+              <!-- Change Email -->
+              <div class="security-card-item" id="btnChangeEmail">
+                <div class="sec-left">
+                  <span class="sec-icon cyan">✉️</span>
+                  <div>
+                    <h4>Change Email</h4>
+                    <p>Update your registered email address</p>
+                  </div>
+                </div>
+                <span class="sec-arrow">›</span>
+              </div>
+
+              <!-- Active Sessions -->
+              <div class="security-card-item" id="btnActiveSessions">
+                <div class="sec-left">
+                  <span class="sec-icon blue">💻</span>
+                  <div>
+                    <h4>Active Sessions</h4>
+                    <p>Manage your active sessions</p>
+                  </div>
+                </div>
+                <span class="sec-arrow">›</span>
+              </div>
+
+              <!-- Two-Factor Auth -->
+              <div class="security-card-item" id="btn2FA">
+                <div class="sec-left">
+                  <span class="sec-icon teal">📱</span>
+                  <div>
+                    <h4>Two-Factor Authentication</h4>
+                    <p>Add an extra layer of security</p>
+                  </div>
+                </div>
+                <span class="sec-arrow">›</span>
+              </div>
+
+              <!-- Delete Account -->
+              <div class="security-card-item danger-item" id="btnDeleteAccount">
+                <div class="sec-left">
+                  <span class="sec-icon red">🗑️</span>
+                  <div>
+                    <h4>Delete Account</h4>
+                    <p>Permanently delete your account</p>
+                  </div>
+                </div>
+                <span class="sec-arrow">›</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. APPEARANCE CARD -->
+          <section class="settings-card">
+            <div class="badge-step-title">
+              <span class="step-num-icon purple">🎨 3</span>
+              <div>
+                <h3>Appearance</h3>
+                <p>Choose your preferred display mode.</p>
+              </div>
+            </div>
+
+            <div class="theme-select-row">
+              <div class="theme-option-box active" data-theme="dark">
+                <div class="theme-box-header">
+                  <span class="theme-symbol">🌙</span>
+                  <span class="theme-check-badge">✓</span>
+                </div>
+                <h4>Dark</h4>
+                <p>Best for low light</p>
+              </div>
+
+              <div class="theme-option-box" data-theme="system">
+                <div class="theme-box-header">
+                  <span class="theme-symbol">🖥️</span>
+                  <span class="theme-check-badge">✓</span>
+                </div>
+                <h4>System</h4>
+                <p>Use system setting</p>
+              </div>
+
+              <div class="theme-option-box" data-theme="light">
+                <div class="theme-box-header">
+                  <span class="theme-symbol">☀️</span>
+                  <span class="theme-check-badge">✓</span>
+                </div>
+                <h4>Light</h4>
+                <p>Best for bright light</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. LOGOUT CARD -->
+          <section class="settings-card logout-section">
+            <div class="badge-step-title">
+              <span class="step-num-icon red">🚪 4</span>
+              <div>
+                <h3>Logout</h3>
+                <p>Log out from your account.</p>
+              </div>
+            </div>
+            <button type="button" class="btn-logout" id="btnLogout">
+            Log Out ↪
+            </button>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN: SUMMARY CARD -->
+        <aside class="settings-right-col">
+          <div class="summary-card">
+            <div class="summary-avatar-wrap">
+              <div class="summary-avatar-inner">
+                <img src="/static/bull-3d.png" id="summaryAvatarImg" alt="Summary Profile Photo" class="summary-profile-img">
+                <span class="online-indicator-dot"></span>
+              </div>
+              <div class="summary-name-row">
+                <h3 id="summaryUserName">JAGAN</h3>
+                <span class="plan-badge-pill">Pro Plan</span>
+              </div>
+            </div>
+
+            <div class="summary-stats-list">
+              <div class="summary-stat-row">
+                <div class="stat-left">
+                  <span class="stat-ico">📅</span>
+                  <span>Member Since</span>
+                </div>
+                <strong id="statMemberSince">Aug 2026</strong>
+              </div>
+
+              <div class="summary-stat-row">
+                <div class="stat-left">
+                  <span class="stat-ico">📊</span>
+                  <span>Total Trades</span>
+                </div>
+                <strong id="statTotalTrades">0</strong>
+              </div>
+
+              <div class="summary-stat-row">
+                <div class="stat-left">
+                  <span class="stat-ico">🎯</span>
+                  <span>Process Score (Avg)</span>
+                </div>
+                <strong id="statProcessScore" class="text-green">0%</strong>
+              </div>
+
+              <div class="summary-stat-row">
+                <div class="stat-left">
+                  <span class="stat-ico">📈</span>
+                  <span>Win Rate</span>
+                </div>
+                <strong id="statWinRate" class="text-green">0.0%</strong>
+              </div>
+            </div>
+
+            <div class="summary-quote-box">
+              <span class="quote-mark">“</span>
+              <p>You can't control the outcome, but you can control your execution.</p>
+              <span class="quote-author">– EdgeCraft</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- 1. EDIT PROFILE MODAL -->
+  <div class="modal-backdrop" id="editProfileModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Profile Details</h3>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+      <form id="editProfileForm" class="modal-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="inputFullName" required placeholder="Full Name">
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="inputUsername" required placeholder="Username">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="inputEmail" required placeholder="name@example.com">
+        </div>
+        <div class="form-group">
+          <label>Timezone</label>
+          <select id="selectTimezone">
+            <option value="Asia/Kolkata (GMT +05:30)">Asia/Kolkata (GMT +05:30)</option>
+            <option value="America/New_York (EST)">America/New_York (EST)</option>
+            <option value="UTC (GMT +00:00)">UTC (GMT +00:00)</option>
+            <option value="Europe/London (GMT)">Europe/London (GMT)</option>
+            <option value="Asia/Dubai (GMT +04:00)">Asia/Dubai (GMT +04:00)</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-cancel" data-close>Cancel</button>
+          <button type="submit" class="btn-modal-save">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. CHANGE PASSWORD MODAL -->
+  <div class="modal-backdrop" id="modalChangePassword">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Change Password</h3>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+      <form id="formChangePassword" class="modal-form">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" required placeholder="••••••••">
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" required placeholder="••••••••">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" required placeholder="••••••••">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-cancel" data-close>Cancel</button>
+          <button type="submit" class="btn-modal-save">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. CHANGE EMAIL MODAL -->
+  <div class="modal-backdrop" id="modalChangeEmail">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Change Registered Email</h3>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+      <form id="formChangeEmail" class="modal-form">
+        <div class="form-group">
+          <label>Current Email</label>
+          <input type="email" id="modalCurEmail" disabled>
+        </div>
+        <div class="form-group">
+          <label>New Email Address</label>
+          <input type="email" id="modalNewEmail" required placeholder="new@example.com">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-cancel" data-close>Cancel</button>
+          <button type="submit" class="btn-modal-save">Save Email</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. GOOGLE ACCOUNT MODAL -->
+  <div class="modal-backdrop" id="modalGoogle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Google Account Integration</h3>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+      <div class="modal-info-box">
+        <p>Your account is linked with <strong>Google OAuth 2.0</strong> for one-click secure login and synchronized cloud backup.</p>
+        <span class="pill-connected">✓ Active & Connected</span>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal-save" data-close>Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ACTIVE SESSIONS MODAL -->
+  <div class="modal-backdrop" id="modalSessions">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Active Sessions</h3>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+      <div class="sessions-list">
+        <div class="session-entry active">
+          <div>
+            <strong>Chrome on Windows (Current)</strong>
+            <p>Bengaluru, India • IP: 127.0.0.1</p>
+          </div>
+          <span class="active-badge">Active Now</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal-cancel" data-close>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE ACCOUNT MODAL -->
+  <div class="modal-backdrop" id="modalGoogle" style="display: none;">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <h3 style="margin: 0; font-size: 1.1rem;">Google Account</h3>
+        </div>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+
+      <div style="background: var(--bg-surface-secondary, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 12px; margin: 12px 0;">
+        <img id="googleUserAvatar" src="/static/bull-3d.png" alt="Google Profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981;">
+        <div style="flex: 1; min-width: 0;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span id="googleUserName" style="font-weight: 700; font-size: 0.9rem;">Jagan Yadav</span>
+            <span style="background: #dcfce7; color: #15803d; font-size: 0.68rem; font-weight: 600; padding: 2px 7px; border-radius: 12px;">Connected</span>
+          </div>
+          <p id="googleUserEmail" style="margin: 2px 0 0 0; font-size: 0.78rem; color: var(--text-secondary, #64748b); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">jagany600@gmail.com</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.8rem; color: var(--text-secondary, #64748b); line-height: 1.4; margin: 0 0 16px 0;">
+        Your account is linked with Google OAuth 2.0 for one-click secure login and automatic cloud sync.
+      </p>
+
+      <div class="modal-actions" style="display: flex; justify-content: space-between; align-items: center;">
+        <button id="disconnectGoogleBtn" type="button" class="btn-modal-cancel" style="color: #ef4444; border-color: #fca5a5;">Disconnect</button>
+        <div style="display: flex; gap: 8px;">
+          <button id="syncGoogleBtn" type="button" class="btn-modal-cancel">Sync Now</button>
+          <button type="button" class="btn-modal-save" data-close>Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. DELETE ACCOUNT MODAL -->
+  <div class="modal-backdrop" id="modalDelete">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="text-red">Delete Account</h3>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+      <p class="modal-warning">This action is permanent and will completely clear your trade logs, habits, and saved preferences.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal-cancel" data-close>Cancel</button>
+        <button type="button" class="btn-danger-confirm" id="btnConfirmDelete">Permanently Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. LOGOUT MODAL -->
+  <div class="modal-backdrop" id="modalLogout">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Confirm Logout</h3>
+        <button type="button" class="btn-close-modal" data-close>&times;</button>
+      </div>
+      <p class="modal-warning">Are you sure you want to log out from this session?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal-cancel" data-close>Cancel</button>
+        <button type="button" class="btn-modal-save" id="btnConfirmLogout">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/settings.js"></script>
+</body>
+</html>

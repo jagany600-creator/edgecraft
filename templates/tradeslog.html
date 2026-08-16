@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EdgeCraft - Trade Log</title>
+  <!-- INSTANT THEME LOADER -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('edgecraft_theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='tradeslog.css') }}" />
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <!-- UNIFIED MASTER SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <div class="logo-text">
+            <h2>EDGECRAFT</h2>
+            <p>Build Your Edge, Master Your Execution</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="/dashboard" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Dashboard</span>
+        </a>
+          <a href="/habits" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+          <span>Habit Tracker</span>
+        </a>
+        <a href="/tradeslog" class="nav-item active">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Trade Log</span>
+        </a>
+        <a href="/analytics" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics</span>
+        </a>
+        <a href="/psychology" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line></svg>
+          <span>Psychology</span>
+        </a>
+        <a href="/calendar" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Calendar</span>
+        </a>
+        <a href="/settings" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/settings" class="user-card-inner">
+          <div class="avatar-box">
+            <img src="/static/bull-3d.png" id="dashSidebarAvatar" alt="Avatar" class="avatar-thumb-mini">
+          </div>
+          <div class="user-details">
+            <div class="user-name">
+              <span id="dashSidebarName">JAGAN</span>
+              <span class="plan-badge">Pro Plan</span>
+            </div>
+            <span class="user-subtext">View Profile</span>
+          </div>
+        </a>
+        <div class="sidebar-bull-wrap">
+          <img src="/static/bull-3d.png" alt="Bull" class="bull-thumb">
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          try {
+            const raw = localStorage.getItem('edgecraft_user_profile');
+            if (raw) {
+              const p = JSON.parse(raw);
+              if (p.avatar) {
+                const img = document.getElementById('dashSidebarAvatar') || document.querySelector('.avatar-box img');
+                if (img) img.src = p.avatar;
+              }
+              if (p.fullName || p.username) {
+                const nameEl = document.getElementById('dashSidebarName') || document.querySelector('.user-name span:first-child');
+                if (nameEl) nameEl.textContent = p.fullName || p.username;
+              }
+            }
+          } catch (e) {}
+        })();
+      </script>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Top Page Header with Date Filters -->
+      <header class="content-header flex-between" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h1 class="page-heading">Trade Log</h1>
+          <p class="page-subheading">Log every trade. Review. Improve. Repeat.</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="header-filters" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <div class="date-picker-box" style="display: flex; align-items: center; gap: 6px; background: rgba(18, 24, 38, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); padding: 4px 10px; border-radius: 6px; font-size: 11px; color: #8E9BAE;">
+            <label>From:</label>
+            <input type="date" id="tradeLogStartDate" class="filter-date-input" style="background: rgba(10, 14, 23, 0.9); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFFFFF; padding: 3px 6px; border-radius: 4px; font-size: 11px; outline: none;" />
+            <label>To:</label>
+            <input type="date" id="tradeLogEndDate" class="filter-date-input" style="background: rgba(10, 14, 23, 0.9); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFFFFF; padding: 3px 6px; border-radius: 4px; font-size: 11px; outline: none;" />
+            <button id="thisWeekBtn" class="btn-preset" style="background: rgba(0, 229, 255, 0.15); color: #00E5FF; border: 1px solid rgba(0, 229, 255, 0.3); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">This Week</button>
+            <button id="thisMonthBtn" class="btn-preset" style="background: rgba(0, 255, 135, 0.15); color: #00FF87; border: 1px solid rgba(0, 255, 135, 0.3); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">This Month</button>
+          </div>
+          <button id="resetTradeLogFilterBtn" class="btn-reset" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #8E9BAE; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;">🔄 Reset</button>
+          <button id="openAddTradeBtn" class="btn-primary-green">+ Add Trade</button>
+        </div>
+      </header>
+
+      <!-- 1. TABLE VIEW (History) -->
+      <div id="tradesListView" class="glass-box table-container">
+        <table class="trades-table">
+          <thead>
+            <tr>
+              <th>SL.No</th>
+              <th>Date</th>
+              <th>Pair</th>
+              <th>Direction</th>
+              <th>Session</th>
+              <th>Setup</th>
+              <th>P&L</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dynamic rows with View/Edit and Delete buttons -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 2. ADD / EDIT TRADE FORM VIEW -->
+      <div id="addTradeFormView" class="form-wrapper" style="display: none;">
+        <div class="form-banner glass-box">
+          <button id="backToTradesBtn" class="btn-back">‹ Back to Trades</button>
+          <h2 id="formHeaderTitle">Add New Trade</h2>
+          <input type="hidden" id="editingTradeId" value="" />
+        </div>
+
+        <form id="tradeForm" onsubmit="return false;">
+          
+          <!-- Section 1: Basic Information -->
+          <div class="glass-box form-section">
+            <h3 class="section-title">1. Basic Information</h3>
+            <div class="form-grid grid-3">
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="tradeDate" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Day (Auto)</label>
+                <input type="text" id="dayOfWeek" class="input-control" readonly />
+              </div>
+              <div class="form-group">
+                <label>Instrument / Pair</label>
+                <select id="symbol" class="input-control">
+                  <option value="XAUUSD">XAUUSD</option>
+                  <option value="BTCUSD">BTCUSD</option>
+                  <option value="ETHUSD">ETHUSD</option>
+                  <option value="EURUSD">EURUSD</option>
+                  <option value="GBPUSD">GBPUSD</option>
+                  <option value="NAS100">NAS100</option>
+                  <option value="US30">US30</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Direction</label>
+                <select id="direction" class="input-control">
+                  <option value="Long">Long</option>
+                  <option value="Short">Short</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Session</label>
+                <select id="session" class="input-control">
+                  <option value="New York">New York</option>
+                  <option value="London">London</option>
+                  <option value="Asian">Asian</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Setup</label>
+                <select id="setup" class="input-control">
+                  <option value="30Min S/R">30Min S/R</option>
+                  <option value="Breakout">Breakout</option>
+                  <option value="Fake out">Fake out</option>
+                  <option value="Fib retracement">Fib retracement</option>
+                  <option value="1Min BOS">1Min BOS</option>
+                </select>
+              </div>
+              <!-- Market Condition Dropdown -->
+              <div class="form-group">
+                <label>Market Condition</label>
+                <select id="marketCondition" class="input-control">
+                  <option value="Trending">Trending</option>
+                  <option value="Ranging">Ranging</option>
+                  <option value="Low Volatility">Low Volatility</option>
+                  <option value="Volatile">Volatile</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Execution (Ordered logically by Price and Time) -->
+          <div class="glass-box form-section">
+            <h3 class="section-title">2. Execution</h3>
+            <div class="form-grid grid-3">
+              <div class="form-group">
+                <label>Volume / Lot Size</label>
+                <input type="number" step="0.01" id="lotSize" value="0.10" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Entry Price</label>
+                <input type="number" step="0.01" id="entryPrice" placeholder="2336.45" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Stop Loss</label>
+                <input type="number" step="0.01" id="stopLoss" placeholder="2329.45" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Take Profit</label>
+                <input type="number" step="0.01" id="takeProfit" placeholder="2346.45" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Exit Price</label>
+                <input type="number" step="0.01" id="exitPrice" placeholder="2344.25" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Entry Time</label>
+                <input type="time" id="entryTime" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Exit Time</label>
+                <input type="time" id="exitTime" class="input-control" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Performance -->
+          <div class="glass-box form-section">
+            <h3 class="section-title">3. Performance</h3>
+            <div class="form-grid grid-4">
+              <div class="form-group">
+                <label>Risk %</label>
+                <input type="number" step="0.1" id="riskPercent" value="1.0" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>Risk Amount ($)</label>
+                <input type="number" step="1" id="plannedRisk" value="100" class="input-control" />
+              </div>
+              <div class="form-group">
+                <label>P&L (USD)</label>
+                <input type="text" id="pnlDisplay" value="$0.00" class="input-control readonly-accent" readonly />
+              </div>
+              <div class="form-group">
+                <label>R Multiple</label>
+                <input type="text" id="rMultipleDisplay" value="0.00R" class="input-control readonly-accent" readonly />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Psychology -->
+          <div class="glass-box form-section">
+            <h3 class="section-title">4. Psychology</h3>
+            <div class="form-grid grid-3">
+              <div class="form-group">
+                <label>Emotion Before Trade</label>
+                <select id="emotionBefore" class="input-control">
+                  <option value="Calm">Calm</option>
+                  <option value="Revenge">Revenge</option>
+                  <option value="Boredom">Boredom</option>
+                  <option value="FOMO">FOMO</option>
+                  <option value="Fear">Fear</option>
+                  <option value="Greed">Greed</option>
+                  <option value="Hope">Hope</option>
+                  <option value="Overconfidence">Overconfidence</option>
+                  <option value="Frustration">Frustration</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Emotion During Trade</label>
+                <select id="emotionDuring" class="input-control">
+                  <option value="Calm">Calm</option>
+                  <option value="Revenge">Revenge</option>
+                  <option value="Boredom">Boredom</option>
+                  <option value="FOMO">FOMO</option>
+                  <option value="Fear">Fear</option>
+                  <option value="Greed">Greed</option>
+                  <option value="Hope">Hope</option>
+                  <option value="Overconfidence">Overconfidence</option>
+                  <option value="Frustration">Frustration</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Emotion After Trade</label>
+                <select id="emotionAfter" class="input-control">
+                  <option value="Calm">Calm</option>
+                  <option value="Revenge">Revenge</option>
+                  <option value="Boredom">Boredom</option>
+                  <option value="FOMO">FOMO</option>
+                  <option value="Fear">Fear</option>
+                  <option value="Greed">Greed</option>
+                  <option value="Hope">Hope</option>
+                  <option value="Overconfidence">Overconfidence</option>
+                  <option value="Frustration">Frustration</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Sliders -->
+            <div class="form-grid grid-3" style="margin-top: 16px;">
+              <div class="form-group">
+                <label>Confidence Level: <span id="confVal">8</span>/10</label>
+                <input type="range" id="confidenceLevel" min="1" max="10" value="8" class="range-slider" />
+              </div>
+              <div class="form-group">
+                <label>Stress Level: <span id="stressVal">3</span>/10</label>
+                <input type="range" id="stressLevel" min="1" max="10" value="3" class="range-slider" />
+              </div>
+              <div class="form-group">
+                <label>FOMO Level: <span id="fomoVal">2</span>/10</label>
+                <input type="range" id="fomoLevel" min="1" max="10" value="2" class="range-slider" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: Discipline & Process Score Card -->
+          <div class="glass-box form-section">
+            <h3 class="section-title">5. Discipline & Execution Rating</h3>
+            
+            <div class="form-grid grid-2">
+              <div class="toggle-row">
+                <span>Did I follow my Plan ?</span>
+                <div class="btn-group" data-toggle="followPlan">
+                  <button type="button" class="btn-toggle active" data-val="true">YES</button>
+                  <button type="button" class="btn-toggle" data-val="false">NO</button>
+                </div>
+              </div>
+
+              <div class="toggle-row">
+                <span>Was this my A+setup ?</span>
+                <div class="btn-group" data-toggle="aPlusSetup">
+                  <button type="button" class="btn-toggle active" data-val="true">YES</button>
+                  <button type="button" class="btn-toggle" data-val="false">NO</button>
+                </div>
+              </div>
+
+              <div class="toggle-row">
+                <span>Did I respect my Risk Plan?</span>
+                <div class="btn-group" data-toggle="respectRisk">
+                  <button type="button" class="btn-toggle active" data-val="true">YES</button>
+                  <button type="button" class="btn-toggle" data-val="false">NO</button>
+                </div>
+              </div>
+
+              <div class="toggle-row">
+                <span>Did I executed exactly as per my Plan ?</span>
+                <div class="btn-group" data-toggle="exactExecution">
+                  <button type="button" class="btn-toggle active" data-val="true">YES</button>
+                  <button type="button" class="btn-toggle" data-val="false">NO</button>
+                </div>
+              </div>
+
+              <div class="toggle-row">
+                <span>Can I take same trade again in Future ?</span>
+                <div class="btn-group" data-toggle="repeatTrade">
+                  <button type="button" class="btn-toggle active" data-val="true">YES</button>
+                  <button type="button" class="btn-toggle" data-val="false">NO</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Process Score Output -->
+            <div class="discipline-score-card" style="margin-top: 20px; padding: 16px; background: rgba(10, 14, 23, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span id="starDisplay" style="font-size: 20px; color: #FFD700; letter-spacing: 2px;">⭐⭐⭐⭐⭐</span>
+                  <span id="scoreBadge" style="margin-left: 12px; font-weight: 700; font-size: 16px; color: #00FF87;">5/5 = 100% 🟢</span>
+                </div>
+                <div id="scoreTierTitle" style="font-weight: 700; font-size: 15px; color: #00FF87;">A+ Process Trade</div>
+              </div>
+              <p id="scoreFeedbackMsg" style="margin: 8px 0 0 0; font-size: 13px; color: #A0AEC0;">
+                Perfect execution. You followed your process completely.
+              </p>
+            </div>
+          </div>
+
+          <!-- Section 6: Reflection -->
+          <div class="glass-box form-section">
+            <h3 class="section-title">6. Reflection</h3>
+            <div class="form-grid grid-2">
+              <div class="form-group">
+                <label>Trade Notes</label>
+                <textarea id="tradeNotes" rows="3" class="input-control" placeholder="Enter trade details..."></textarea>
+              </div>
+              <div class="form-group">
+                <label>What Went Well?</label>
+                <textarea id="whatWentWell" rows="3" class="input-control" placeholder="Execution strengths..."></textarea>
+              </div>
+              <div class="form-group">
+                <label>What Went Wrong?</label>
+                <textarea id="whatWentWrong" rows="3" class="input-control" placeholder="Mistakes made..."></textarea>
+              </div>
+              <div class="form-group">
+                <label>Lesson Learned</label>
+                <textarea id="lessonLearned" rows="3" class="input-control" placeholder="Takeaway..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 7: Evidence -->
+          <div class="glass-box form-section">
+            <h3 class="section-title">7. Evidence (Screenshots)</h3>
+            <div class="form-grid grid-3">
+              <div class="form-group upload-card">
+                <label>Before Entry</label>
+                <input type="file" id="beforeImg" accept="image/*" class="file-input-hidden" />
+                <div id="beforePreview" class="img-upload-box">Click or Drag Image Here</div>
+              </div>
+              <div class="form-group upload-card">
+                <label>During Trade</label>
+                <input type="file" id="duringImg" accept="image/*" class="file-input-hidden" />
+                <div id="duringPreview" class="img-upload-box">Click or Drag Image Here</div>
+              </div>
+              <div class="form-group upload-card">
+                <label>After Exit</label>
+                <input type="file" id="afterImg" accept="image/*" class="file-input-hidden" />
+                <div id="afterPreview" class="img-upload-box">Click or Drag Image Here</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer-actions">
+            <button type="button" id="saveTradeBtn" class="btn-primary-purple">Save Trade</button>
+          </div>
+
+        </form>
+      </div>
+<!-- Custom Toast Notification Container -->
+      <div id="toastContainer" class="toast-container"></div>
+
+      <!-- Custom Delete Confirmation Modal -->
+      <div id="deleteModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box glass-box">
+          <h3>Confirm Delete</h3>
+          <p>Are you sure you want to delete this trade? This action cannot be undone.</p>
+          <div class="modal-actions">
+            <button id="cancelDeleteBtn" class="btn-secondary">Cancel</button>
+            <button id="confirmDeleteBtn" class="btn-danger">Delete Trade</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='tradeslog.js') }}"></script>
+</body>
+</html>

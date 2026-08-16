@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EdgeCraft - Analytics</title>
+  <!-- INSTANT THEME LOADER -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('edgecraft_theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='tradeslog.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <!-- UNIFIED MASTER SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <div class="logo-text">
+            <h2>EDGECRAFT</h2>
+            <p>Build Your Edge, Master Your Execution</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="/dashboard" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Dashboard</span>
+        </a>
+          <a href="/habits" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+          <span>Habit Tracker</span>
+        </a>
+        <a href="/tradeslog" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Trade Log</span>
+        </a>
+        <a href="/analytics" class="nav-item active">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics</span>
+        </a>
+        <a href="/psychology" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line></svg>
+          <span>Psychology</span>
+        </a>
+        <a href="/calendar" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Calendar</span>
+        </a>
+        <a href="/settings" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+     <div class="sidebar-footer">
+        <a href="/settings" class="user-card-inner">
+          <div class="avatar-box">
+            <img src="/static/bull-3d.png" id="dashSidebarAvatar" alt="Avatar" class="avatar-thumb-mini">
+          </div>
+          <div class="user-details">
+            <div class="user-name">
+              <span id="dashSidebarName">JAGAN</span>
+              <span class="plan-badge">Pro Plan</span>
+            </div>
+            <span class="user-subtext">View Profile</span>
+          </div>
+        </a>
+        <div class="sidebar-bull-wrap">
+          <img src="/static/bull-3d.png" alt="Bull" class="bull-thumb">
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          try {
+            const raw = localStorage.getItem('edgecraft_user_profile');
+            if (raw) {
+              const p = JSON.parse(raw);
+              if (p.avatar) {
+                const img = document.getElementById('dashSidebarAvatar') || document.querySelector('.avatar-box img');
+                if (img) img.src = p.avatar;
+              }
+              if (p.fullName || p.username) {
+                const nameEl = document.getElementById('dashSidebarName') || document.querySelector('.user-name span:first-child');
+                if (nameEl) nameEl.textContent = p.fullName || p.username;
+              }
+            }
+          } catch (e) {}
+        })();
+      </script>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Top Page Header & Controls -->
+      <header class="content-header flex-between">
+        <div>
+          <h1 class="page-heading">Analytics</h1>
+          <p class="page-subheading">Data reveals patterns. Patterns build edge.</p>
+        </div>
+        
+        <div class="header-filters">
+          <!-- Calendar / Period Filter -->
+          <div class="date-picker-box">
+            <label>From:</label>
+            <input type="date" id="startDateInput" class="filter-date-input" />
+            <label>To:</label>
+            <input type="date" id="endDateInput" class="filter-date-input" />
+            <button id="applyCurrentMonthBtn" class="btn-preset">This Month</button>
+          </div>
+
+          <!-- Metric Focus Category Filter -->
+          <select id="categoryFilterSelect" class="filter-select">
+            <option value="all">All Performance Metrics</option>
+            <option value="setup">Setup Performance Only</option>
+            <option value="execution">Execution & Time Only</option>
+            <option value="psychology">Psychology & Compliance Only</option>
+          </select>
+
+          <button id="resetAnalyticsBtn" class="btn-reset">🔄 Reset All</button>
+        </div>
+      </header>
+
+      <!-- KPI Row (6 Cards) -->
+      <div class="analytics-kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-head"><span>TOTAL TRADES</span><span class="kpi-icon icon-purple">📊</span></div>
+          <h2 id="kpiTotalTrades">0</h2>
+          <div class="kpi-sub positive">Selected Period</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head"><span>WIN RATE</span><span class="kpi-icon icon-green">🎯</span></div>
+          <h2 id="kpiWinRate" style="color:#00FF87;">0.00%</h2>
+          <div class="kpi-sub positive">Win Ratio</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head"><span>AVG R-MULTIPLE</span><span class="kpi-icon icon-blue">R</span></div>
+          <h2 id="kpiAvgR" style="color:#00E5FF;">+0.00R</h2>
+          <div class="kpi-sub positive">Avg Return</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head"><span>EXPECTANCY</span><span class="kpi-icon icon-yellow">Σ</span></div>
+          <h2 id="kpiExpectancy" style="color:#FFD700;">+0.00R</h2>
+          <div class="kpi-sub positive">System Value</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head"><span>NET P&L</span><span class="kpi-icon icon-green">💰</span></div>
+          <h2 id="kpiNetPnlR" style="color:#00FF87;">+0.00R</h2>
+          <div class="kpi-sub positive">Net R Points</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head"><span>PROFIT FACTOR</span><span class="kpi-icon icon-purple">⚖</span></div>
+          <h2 id="kpiProfitFactor" style="color:#9D4EDD;">0.00</h2>
+          <div class="kpi-sub positive">Risk/Reward Efficiency</div>
+        </div>
+      </div>
+
+      <!-- Main Analytics Grid -->
+      <div class="analytics-grid-4">
+        
+        <!-- Card 1: Setup -->
+        <div class="glass-box chart-card" data-cat="setup">
+          <div class="card-head">
+            <h3>1. Performance by Setup</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Setup Performance', 'setupChart')">View Details</button>
+          </div>
+          <div class="chart-body flex-row">
+            <div class="chart-wrapper"><canvas id="setupChart"></canvas></div>
+            <div id="setupLegend" class="card-legend-list"></div>
+          </div>
+          <div class="card-footer-metrics" id="footer1"></div>
+        </div>
+
+        <!-- Card 2: Instrument -->
+        <div class="glass-box chart-card" data-cat="setup">
+          <div class="card-head">
+            <h3>2. Performance by Instrument</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Instrument Performance', 'symbolChart')">View Details</button>
+          </div>
+          <div class="chart-body"><canvas id="symbolChart"></canvas></div>
+          <div class="card-footer-metrics" id="footer2"></div>
+        </div>
+
+        <!-- Card 3: Session -->
+        <div class="glass-box chart-card" data-cat="execution">
+          <div class="card-head">
+            <h3>3. Performance by Session</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Session Performance', 'sessionChart')">View Details</button>
+          </div>
+          <div class="chart-body flex-row">
+            <div class="chart-wrapper"><canvas id="sessionChart"></canvas></div>
+            <div id="sessionLegend" class="card-legend-list"></div>
+          </div>
+          <div class="card-footer-metrics" id="footer3"></div>
+        </div>
+
+        <!-- Card 4: Day of Week -->
+        <div class="glass-box chart-card" data-cat="execution">
+          <div class="card-head">
+            <h3>4. Performance by Day of Week</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Day of Week Performance', 'dayChart')">View Details</button>
+          </div>
+          <div class="chart-body"><canvas id="dayChart"></canvas></div>
+          <div class="card-footer-metrics" id="footer4"></div>
+        </div>
+
+        <!-- Card 5: Time of Day (Area Line Chart) -->
+        <div class="glass-box chart-card" data-cat="execution">
+          <div class="card-head">
+            <h3>5. Performance by Time of Day</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Time of Day Performance', 'timeChart')">View Details</button>
+          </div>
+          <div class="chart-body"><canvas id="timeChart"></canvas></div>
+          <div class="card-footer-metrics" id="footer5"></div>
+        </div>
+
+       <!-- Card 6: Performance by Emotion -->
+<div class="glass-box chart-card">
+  <div class="card-header flex-between">
+    <h3>6. Performance by Emotion</h3>
+    <button class="btn-view-details" onclick="openDetailsModal('emotion')">View Details</button>
+  </div>
+  <div class="chart-body-bar">
+    <canvas id="emotionChart"></canvas>
+  </div>
+  <div class="card-footer" id="footer6"></div>
+</div>
+
+        <!-- Card 7: Risk Level -->
+        <div class="glass-box chart-card" data-cat="execution">
+          <div class="card-head">
+            <h3>7. Performance by Risk Level</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Risk Level Performance', 'riskChart')">View Details</button>
+          </div>
+          <div class="chart-body flex-row">
+            <div class="chart-wrapper"><canvas id="riskChart"></canvas></div>
+            <div id="riskLegend" class="card-legend-list"></div>
+          </div>
+          <div class="card-footer-metrics" id="footer7"></div>
+        </div>
+
+        <!-- Card 8: Rule Compliance -->
+        <div class="glass-box chart-card" data-cat="psychology">
+          <div class="card-head">
+            <h3>8. Performance by Rule Compliance</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Rule Compliance', 'complianceChart')">View Details</button>
+          </div>
+          <div class="chart-body flex-row">
+            <div class="chart-wrapper"><canvas id="complianceChart"></canvas></div>
+            <div id="complianceLegend" class="card-legend-list"></div>
+          </div>
+          <div class="card-footer-metrics" id="footer8"></div>
+        </div>
+
+        <!-- Card 9: Performance by Market Condition -->
+<div class="glass-box chart-card">
+  <div class="card-header flex-between">
+    <h3>9. Performance by Market Condition</h3>
+    <button class="btn-view-details" onclick="openDetailsModal('market')">View Details</button>
+  </div>
+  <div class="chart-body-bar">
+    <canvas id="marketChart"></canvas>
+  </div>
+  <div class="card-footer" id="footer9"></div>
+</div>
+        <!-- Card 10: Long vs Short -->
+        <div class="glass-box chart-card" data-cat="setup">
+          <div class="card-head">
+            <h3>10. Long vs Short Performance</h3>
+            <button class="btn-view-details" onclick="window.openDetailModal('Long vs Short Performance', 'longShortChart')">View Details</button>
+          </div>
+          <div class="chart-body flex-row">
+            <div class="chart-wrapper" style="width: 40%;"><canvas id="longShortChart"></canvas></div>
+            <div id="longShortStats" class="side-ls-table"></div>
+          </div>
+          <div class="card-footer-metrics" id="footer10"></div>
+        </div>
+
+        <!-- Key Insights Card -->
+      <div class="glass-box key-insights-card">
+        <div class="insights-header">
+          <h3>Key Insights</h3>
+        </div>
+
+        <div id="insightsContainer" class="insights-list">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Glowing Watermark Icon -->
+        <div class="insights-watermark">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+        </div>
+      </div>
+
+  <!-- View Details Modal Popup -->
+  <div id="viewDetailsModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content glass-box" style="max-width: 650px;">
+      <div class="modal-header">
+        <h2 id="modalMetricTitle">Metric Details</h2>
+        <button id="closeDetailModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div id="modalMetricContent" class="modal-body" style="height: 320px;">
+        <canvas id="modalCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='analytics.js') }}"></script>
+</body>
+</html>

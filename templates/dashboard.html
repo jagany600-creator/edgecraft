@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EdgeCraft - Dashboard</title>
+
+  <!-- INSTANT THEME INITIALIZER -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('edgecraft_theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <!-- SIDEBAR (FIXED LEFT COLUMN) -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <div class="logo-text">
+            <h2>EDGECRAFT</h2>
+            <p>Build Your Edge, Master Your Execution</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="/dashboard" class="nav-item active">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/habits" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+          <span>Habit Tracker</span>
+        </a>
+        <a href="/tradeslog" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Trade Log</span>
+        </a>
+        <a href="/analytics" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics</span>
+        </a>
+        <a href="/psychology" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line></svg>
+          <span>Psychology</span>
+        </a>
+        <a href="/calendar" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Calendar</span>
+        </a>
+        <a href="/settings" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+    <div class="sidebar-footer">
+        <a href="/settings" class="user-card-inner">
+          <div class="avatar-box">
+            <img src="/static/bull-3d.png" id="dashSidebarAvatar" alt="Avatar" class="avatar-thumb-mini">
+          </div>
+          <div class="user-details">
+            <div class="user-name">
+              <span id="dashSidebarName">JAGAN</span>
+              <span class="plan-badge">Pro Plan</span>
+            </div>
+            <span class="user-subtext">View Profile</span>
+          </div>
+        </a>
+        <div class="sidebar-bull-wrap">
+          <img src="/static/bull-3d.png" alt="Bull" class="bull-thumb">
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          try {
+            const raw = localStorage.getItem('edgecraft_user_profile');
+            if (raw) {
+              const p = JSON.parse(raw);
+              if (p.avatar) {
+                const img = document.getElementById('dashSidebarAvatar') || document.querySelector('.avatar-box img');
+                if (img) img.src = p.avatar;
+              }
+              if (p.fullName || p.username) {
+                const nameEl = document.getElementById('dashSidebarName') || document.querySelector('.user-name span:first-child');
+                if (nameEl) nameEl.textContent = p.fullName || p.username;
+              }
+            }
+          } catch (e) {}
+        })();
+      </script>
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="main-content dashboard-main">
+      
+      <!-- TOP GREETING & DATE FILTER HEADER -->
+      <div class="dash-top-header">
+        <div class="greeting-box">
+          <h1 id="dynamicGreeting">Good Evening, Trader! 👋</h1>
+          <p class="greeting-subtitle">Your trading command center & execution overview.</p>
+        </div>
+
+        <div class="dash-controls-bar">
+          <div class="dash-filter-group">
+            <span class="filter-lbl">From:</span>
+            <input type="date" id="dashDateFrom" class="dash-date-input">
+          </div>
+          <div class="dash-filter-group">
+            <span class="filter-lbl">To:</span>
+            <input type="date" id="dashDateTo" class="dash-date-input">
+          </div>
+          <button type="button" class="btn-dash-quick" id="btnDashThisMonth">This Month</button>
+          <button type="button" class="btn-dash-reset" id="btnDashReset">↺ Reset</button>
+
+          <!-- Notification Bell & Anchored Dropdown -->
+          <div class="notif-dropdown-wrapper">
+            <button type="button" class="btn-notification-bell" id="btnNotifications" title="Notifications">
+              🔔<span class="notif-badge" id="notifBadgeCount" style="display: none;">0</span>
+            </button>
+
+            <div class="notif-popover" id="notifPopover">
+              <div class="notif-popover-header">
+                <div class="notif-popover-title">
+                  <span>Notifications</span>
+                  <button type="button" class="btn-notif-clear" id="btnNotifClearAll">Clear All</button>
+                </div>
+              </div>
+
+              <div class="notif-popover-body" id="notifListBody">
+                <!-- Injected Dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1. TOP 5 KPI CARDS -->
+      <div class="dash-kpi-grid">
+        <!-- Total P&L -->
+        <div class="dash-kpi-card">
+          <div class="kpi-head">
+            <span>TOTAL P&L</span>
+            <span class="kpi-icon teal">💰</span>
+          </div>
+          <strong class="kpi-num text-green" id="kpiDashPnL">+$0.00</strong>
+          <span class="kpi-subtext" id="kpiDashPnLComp">No previous data</span>
+        </div>
+
+        <!-- Win Rate -->
+        <div class="dash-kpi-card">
+          <div class="kpi-head">
+            <span>WIN RATE</span>
+            <span class="kpi-icon green">🎯</span>
+          </div>
+          <strong class="kpi-num text-green" id="kpiDashWinRate">0.0%</strong>
+          <span class="kpi-subtext" id="kpiDashWinRateComp">No previous data</span>
+        </div>
+
+        <!-- Trades Count -->
+        <div class="dash-kpi-card">
+          <div class="kpi-head">
+            <span>TRADES</span>
+            <span class="kpi-icon purple">📊</span>
+          </div>
+          <strong class="kpi-num" id="kpiDashTrades">0</strong>
+          <span class="kpi-subtext" id="kpiDashTradesComp">Selected period</span>
+        </div>
+
+        <!-- Profit Factor -->
+        <div class="dash-kpi-card">
+          <div class="kpi-head">
+            <span>PROFIT FACTOR</span>
+            <span class="kpi-icon purple">⚖</span>
+          </div>
+          <strong class="kpi-num text-purple" id="kpiDashPF">0.00</strong>
+          <span class="kpi-subtext" id="kpiDashPFComp">Risk/Reward Efficiency</span>
+        </div>
+
+        <!-- Expectancy -->
+        <div class="dash-kpi-card">
+          <div class="kpi-head">
+            <span>EXPECTANCY</span>
+            <span class="kpi-icon amber">Σ</span>
+          </div>
+          <strong class="kpi-num text-amber" id="kpiDashExpectancy">+0.00R</strong>
+          <span class="kpi-subtext" id="kpiDashExpectancyComp">System value per trade</span>
+        </div>
+      </div>
+
+      <!-- 2. MIDDLE ROW: EQUITY CURVE + HABIT SCORE -->
+      <div class="dash-middle-grid">
+        
+        <!-- Large Equity Curve -->
+        <div class="dash-card equity-curve-card">
+          <div class="card-head-row">
+            <div>
+              <h3>Equity Curve</h3>
+              <p class="card-subtext">Cumulative growth trajectory across closed trades.</p>
+            </div>
+            <div class="equity-toggle-box">
+              <select id="equityModeSelect" class="dash-select">
+                <option value="R">R-Multiple</option>
+                <option value="USD">USD ($)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="equity-chart-container" id="equityChartContainer">
+            <!-- Dynamic SVG Equity Curve -->
+          </div>
+        </div>
+
+        <!-- Habit Score Card -->
+        <div class="dash-card habit-score-card">
+          <div class="card-head-row">
+            <div>
+              <h3>Habit Score</h3>
+              <p class="card-subtext">Process consistency from Habit Tracker.</p>
+            </div>
+            <span class="info-pill" title="Evaluated across your 4 primary routine disciplines">Process ⓘ</span>
+          </div>
+
+          <div class="habit-score-body">
+            <div class="habit-score-hero">
+              <div class="score-circle-ring" id="habitScoreRing">
+                <span class="score-main-num" id="habitScoreNum">0</span>
+                <span class="score-max">/100</span>
+              </div>
+              <div class="habit-score-meta">
+                <h4 id="habitScoreTier" class="text-green">Analyzing...</h4>
+                <p id="habitScoreMessage">Routine discipline consistency.</p>
+              </div>
+            </div>
+
+            <!-- 4 Critical Habits Breakdown -->
+            <div class="habit-mini-bars-list" id="habitBreakdownBars">
+              <!-- Dynamically Populated from Habit Tracker -->
+            </div>
+
+            <!-- Focus Area / Weakest Habit -->
+            <div class="habit-weakest-box" id="habitWeakestBox">
+              <span class="weakest-lbl">🎯 Focus Area:</span>
+              <span class="weakest-name" id="weakestHabitText">All habits aligned.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. THREE-COLUMN ROW: SETUP PERFORMANCE + P&L CALENDAR + RECENT TRADES -->
+      <div class="dash-three-col-grid">
+        
+        <!-- Performance by Setup Donut -->
+        <div class="dash-card setup-card">
+          <div class="card-head-row">
+            <h3>Performance by Setup</h3>
+            <span class="info-pill">Volume & Return</span>
+          </div>
+
+          <div class="setup-body-wrap">
+            <div class="setup-donut-wrap" id="setupDonutContainer">
+              <!-- Dynamic SVG Donut -->
+            </div>
+            <div class="setup-rows-list" id="setupRowsList">
+              <!-- Populated Dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly P&L Calendar -->
+        <div class="dash-card calendar-card">
+          <div class="calendar-head-nav">
+            <h3>P&L Calendar</h3>
+            <div class="cal-nav-buttons">
+              <button type="button" class="btn-cal-arrow" id="btnCalPrev">‹</button>
+              <span class="cal-month-title" id="calMonthTitle">August 2026</span>
+              <button type="button" class="btn-cal-arrow" id="btnCalNext">›</button>
+            </div>
+          </div>
+
+          <div class="cal-weekdays-row">
+            <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+          </div>
+          <div class="cal-days-grid" id="dashCalGrid">
+            <!-- Dynamic Mini Calendar Days -->
+          </div>
+        </div>
+
+        <!-- Recent Trades -->
+        <div class="dash-card recent-trades-card">
+          <div class="card-head-row">
+            <h3>Recent Trades</h3>
+            <span class="view-pill" onclick="window.location.href='/tradeslog'">Trade Log ↗</span>
+          </div>
+
+          <div class="recent-trades-list" id="recentTradesList">
+            <!-- 5 Most Recent Trades -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. DYNAMIC INSIGHTS -->
+      <div class="dash-card insights-full-card">
+        <div class="card-head-row">
+          <div class="insights-title-box">
+            <span class="insight-bulb-icon">💡</span>
+            <h3>Dynamic Trading Insights</h3>
+          </div>
+          <span class="info-pill">Statistical Intelligence</span>
+        </div>
+
+        <div class="dash-insights-grid" id="dashInsightsGrid">
+          <!-- 3 Dynamic Priority Insights -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- NOTIFICATIONS MODAL OVERLAY -->
+  <div class="notifications-modal-overlay" id="notifModalOverlay">
+    <div class="notifications-card">
+      <div class="notif-header">
+        <div class="notif-title-row">
+          <span>🔔 Notifications</span>
+          <button type="button" class="btn-close-notif" id="btnCloseNotif">✕</button>
+        </div>
+        <p class="notif-subtext">Recent execution alerts, habit reminders & system updates.</p>
+      </div>
+      <div class="notif-list-body" id="notifListBody">
+        <!-- Dynamically Injected -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

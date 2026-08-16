@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EdgeCraft - Psychology</title>
+
+  <!-- INSTANT THEME LOADER -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('edgecraft_theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.classList.add('theme-light');
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('theme-light'));
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/psychology.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <div class="logo-text">
+            <h2>EDGECRAFT</h2>
+            <p>Mindset Shapes Performance.</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="/" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/habits" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+          <span>Habit Tracker</span>
+        </a>
+        <a href="/tradeslog" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Trade Log</span>
+        </a>
+        <a href="/analytics" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics</span>
+        </a>
+        <a href="/psychology" class="nav-item active">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line></svg>
+          <span>Psychology</span>
+        </a>
+        <a href="/calendar" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Calendar</span>
+        </a>
+        <a href="/settings" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+     <div class="sidebar-footer">
+        <a href="/settings" class="user-card-inner">
+          <div class="avatar-box">
+            <img src="/static/bull-3d.png" id="dashSidebarAvatar" alt="Avatar" class="avatar-thumb-mini">
+          </div>
+          <div class="user-details">
+            <div class="user-name">
+              <span id="dashSidebarName">JAGAN</span>
+              <span class="plan-badge">Pro Plan</span>
+            </div>
+            <span class="user-subtext">View Profile</span>
+          </div>
+        </a>
+        <div class="sidebar-bull-wrap">
+          <img src="/static/bull-3d.png" alt="Bull" class="bull-thumb">
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          try {
+            const raw = localStorage.getItem('edgecraft_user_profile');
+            if (raw) {
+              const p = JSON.parse(raw);
+              if (p.avatar) {
+                const img = document.getElementById('dashSidebarAvatar') || document.querySelector('.avatar-box img');
+                if (img) img.src = p.avatar;
+              }
+              if (p.fullName || p.username) {
+                const nameEl = document.getElementById('dashSidebarName') || document.querySelector('.user-name span:first-child');
+                if (nameEl) nameEl.textContent = p.fullName || p.username;
+              }
+            }
+          } catch (e) {}
+        })();
+      </script>
+    </aside>
+
+    <!-- MAIN PSYCHOLOGY VIEW -->
+    <main class="main-content psychology-main">
+      
+      <!-- TOP HEADER WITH FROM - TO DATE FILTER -->
+      <div class="psy-top-header">
+        <div class="header-titles">
+          <h1>Psychology</h1>
+          <p class="subtitle">Understand your emotions. Improve your decisions.</p>
+        </div>
+
+        <div class="psy-date-filter-bar">
+          <div class="filter-group">
+            <span class="filter-lbl">From:</span>
+            <input type="date" id="psyDateFrom" class="psy-date-input">
+          </div>
+          <div class="filter-group">
+            <span class="filter-lbl">To:</span>
+            <input type="date" id="psyDateTo" class="psy-date-input">
+          </div>
+          <button type="button" class="btn-psy-quick" id="btnThisMonth">This Month</button>
+          <button type="button" class="btn-psy-reset" id="btnResetFilter">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- TOP 6 DYNAMIC KPI METRICS -->
+      <div class="psy-kpis-grid">
+        <div class="psy-kpi-card">
+          <div class="kpi-head">
+            <span>TOTAL TRADES</span>
+            <span class="kpi-badge-icon purple">📊</span>
+          </div>
+          <strong class="kpi-num" id="kpiTotalTrades">0</strong>
+          <span class="kpi-subtext" id="kpiTotalTradesSub">Selected period</span>
+        </div>
+
+        <div class="psy-kpi-card">
+          <div class="kpi-head">
+            <span>AVG WIN RATE</span>
+            <span class="kpi-badge-icon green">🎯</span>
+          </div>
+          <strong class="kpi-num text-green" id="kpiAvgWinRate">0.0%</strong>
+          <span class="kpi-subtext">Win ratio</span>
+        </div>
+
+        <div class="psy-kpi-card">
+          <div class="kpi-head">
+            <span>AVG R-MULTIPLE</span>
+            <span class="kpi-badge-icon cyan">R</span>
+          </div>
+          <strong class="kpi-num text-cyan" id="kpiAvgR">+0.00R</strong>
+          <span class="kpi-subtext">Avg Return</span>
+        </div>
+
+        <div class="psy-kpi-card">
+          <div class="kpi-head">
+            <span>EXPECTANCY</span>
+            <span class="kpi-badge-icon amber">Σ</span>
+          </div>
+          <strong class="kpi-num text-amber" id="kpiExpectancy">+0.00R</strong>
+          <span class="kpi-subtext">System Value</span>
+        </div>
+
+        <div class="psy-kpi-card">
+          <div class="kpi-head">
+            <span>NET P&L</span>
+            <span class="kpi-badge-icon teal">💰</span>
+          </div>
+          <strong class="kpi-num text-green" id="kpiNetPnL">+$0.00</strong>
+          <span class="kpi-subtext" id="kpiNetR">+0.00R Total</span>
+        </div>
+
+        <div class="psy-kpi-card">
+          <div class="kpi-head">
+            <span>PROFIT FACTOR</span>
+            <span class="kpi-badge-icon purple">⚖</span>
+          </div>
+          <strong class="kpi-num text-purple" id="kpiProfitFactor">0.00</strong>
+          <span class="kpi-subtext">Risk/Reward Efficiency</span>
+        </div>
+      </div>
+
+      <!-- MIDDLE ROW: PERFORMANCE TABLE & RIGHT METRICS -->
+      <div class="psy-middle-grid">
+        
+        <!-- LEFT: Performance by Emotional State Table -->
+        <div class="psy-card emotion-table-card">
+          <div class="card-inner-head">
+            <div class="card-title-row">
+              <h3>Performance by Emotional State</h3>
+              <span class="info-tag" title="Calculated strictly using Emotion Before Trade">Pre-Trade State ⓘ</span>
+            </div>
+            <p class="card-desc">Your historical data shows an association between your pre-trade emotional state and performance.</p>
+          </div>
+
+          <div class="table-responsive">
+            <table class="psy-table" id="emotionPerformanceTable">
+              <thead>
+                <tr>
+                  <th>EMOTIONAL STATE</th>
+                  <th>TRADES</th>
+                  <th>WIN RATE</th>
+                  <th>AVG R</th>
+                  <th>EXPECTANCY</th>
+                  <th>NET P&L</th>
+                  <th>PROFIT FACTOR</th>
+                </tr>
+              </thead>
+              <tbody id="emotionTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+          <span class="table-disclaimer">* This data reflects historical associations and does not imply direct causation.</span>
+        </div>
+
+        <!-- RIGHT: Win Rate by Emotion & Emotional Consistency Card -->
+        <div class="psy-side-column">
+          
+          <!-- Win Rate Horizontal Bars -->
+          <div class="psy-card">
+            <div class="card-inner-head-row">
+              <h3>Win Rate by Emotional State</h3>
+              <span class="view-pill">View: Bar</span>
+            </div>
+            <div class="emotion-bars-container" id="emotionBarsList">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+          <!-- Emotional Consistency Ring & 3 Ratings -->
+          <div class="psy-card consistency-card">
+            <div class="consistency-top-row">
+              <div class="consistency-donut-wrap">
+                <div class="consistency-donut" id="consistencyDonut">
+                  <span id="consistencyPct" class="donut-center-text">0%</span>
+                </div>
+              </div>
+              <div class="consistency-text-box">
+                <div class="consistency-title-row">
+                  <h4>Emotional Consistency</h4>
+                  <span class="info-tag" title="Measured across consecutive same-day trades: same transitions / total transitions">ⓘ</span>
+                </div>
+                <p id="consistencyDetailText">Calculating consecutive pre-trade sequence...</p>
+              </div>
+            </div>
+
+            <!-- Average Numerical Ratings (Confidence, Stress, FOMO) -->
+            <div class="ratings-mini-grid">
+              <div class="rating-box">
+                <span class="rating-ico">🛡️</span>
+                <span class="rating-lbl">CONFIDENCE</span>
+                <strong id="avgConfidenceScore" class="text-cyan">0/10</strong>
+              </div>
+              <div class="rating-box">
+                <span class="rating-ico">⚡</span>
+                <span class="rating-lbl">STRESS</span>
+                <strong id="avgStressScore" class="text-amber">0/10</strong>
+              </div>
+              <div class="rating-box">
+                <span class="rating-ico">🔥</span>
+                <span class="rating-lbl">FOMO</span>
+                <strong id="avgFomoScore" class="text-red">0/10</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW: SCATTER CHART (LEFT) + HEATMAP & INSIGHTS (RIGHT) -->
+      <div class="psy-bottom-grid">
+        
+        <!-- Left: Scatter / Bubble Chart -->
+        <div class="psy-card scatter-card">
+          <div class="card-inner-head-row">
+            <h3>Emotions vs Average R-Multiple</h3>
+            <span class="view-pill">View: Scatter</span>
+          </div>
+          
+          <div class="scatter-chart-wrap" id="scatterChartContainer">
+            <!-- Injected via JS -->
+          </div>
+          <div class="scatter-footer-note">
+            <span>Bubble size represents trade volume.</span>
+            <span class="disclaimer-mini">Historical association only.</span>
+          </div>
+        </div>
+
+        <!-- Right: Heatmap Matrix & Dynamic Insights -->
+        <div class="psy-card-group-col">
+          
+          <div class="psy-card heatmap-card">
+            <div class="card-inner-head-row">
+              <h3>Emotion Performance Heatmap</h3>
+              <span class="info-tag" title="Color scaled performance across key metrics">Matrix ⓘ</span>
+            </div>
+            
+            <div class="heatmap-matrix-wrap" id="heatmapMatrixContainer">
+              <!-- Injected via JS -->
+            </div>
+
+            <div class="heatmap-legend">
+              <span>Low Performance</span>
+              <div class="legend-gradient-bar"></div>
+              <span>High Performance</span>
+            </div>
+          </div>
+
+          <div class="psy-card insights-card">
+            <div class="card-inner-head">
+              <h3>Key Insights</h3>
+            </div>
+            <div class="insights-list" id="dynamicInsightsList">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM MOTIVATION BANNER -->
+      <div class="psy-bottom-banner">
+        <div class="banner-left">
+          <span class="banner-icon">🧠</span>
+          <div>
+            <strong>Your mindset is your edge.</strong>
+            <p>Track it. Understand it. Master it.</p>
+          </div>
+        </div>
+        <div class="banner-center">
+          <span class="tip-badge">💡 Pro Tip</span>
+          <p>Review trades taken under Fear or FOMO. Small mindset shifts yield the largest expectancy gains.</p>
+        </div>
+        <button type="button" class="btn-journal-link" onclick="window.location.href='/tradeslog'">
+          View Trade Log ↗
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/static/psychology.js"></script>
+</body>
+</html>

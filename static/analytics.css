@@ -1,0 +1,881 @@
+/* =========================================================
+   EDGECRAFT ANALYTICS COMPLETE STYLESHEET
+   ========================================================= */
+
+/* Header Filters & Controls */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.date-picker-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(18, 24, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #8E9BAE;
+}
+
+.filter-date-input {
+  background: rgba(10, 14, 23, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  outline: none;
+}
+
+.btn-preset {
+  background: rgba(0, 255, 135, 0.15);
+  color: #00FF87;
+  border: 1px solid rgba(0, 255, 135, 0.3);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-select {
+  background: rgba(18, 24, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E2E8F0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-reset {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8E9BAE;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-reset:hover {
+  color: #00FF87;
+  border-color: #00FF87;
+}
+
+/* KPI Summary Cards Grid */
+.analytics-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.kpi-card {
+  background: rgba(18, 24, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 14px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kpi-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #8E9BAE;
+}
+
+.kpi-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.icon-purple { background: rgba(124, 58, 237, 0.2); color: #7C3AED; }
+.icon-green { background: rgba(0, 255, 135, 0.2); color: #00FF87; }
+.icon-blue { background: rgba(0, 229, 255, 0.2); color: #00E5FF; }
+.icon-yellow { background: rgba(255, 215, 0, 0.2); color: #FFD700; }
+
+.kpi-card h2 {
+  margin: 6px 0 2px 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.kpi-sub {
+  font-size: 10px;
+  color: #00FF87;
+}
+
+/* Main Performance Grid Layout */
+.analytics-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.chart-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 280px;
+  position: relative;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-head h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.btn-view-details {
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  color: #00E5FF;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-view-details:hover {
+  text-decoration: underline;
+}
+
+/* Chart Body Layout & Compact Layout */
+.chart-body {
+  flex: 1;
+  position: relative;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Changed from space-between to prevent wide gaps */
+  width: 100%;
+  gap: 24px; /* Tight gap between chart and legend */
+}
+
+/* Doughnut Wrapper Sizing */
+.chart-wrapper {
+  width: 170px;
+  height: 170px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Side Legend List - Clean Tight Alignment */
+.card-legend-list {
+  flex: 1;
+  max-width: 260px; /* Constrains the width so text and numbers stay close */
+  font-size: 12px;
+  color: #8E9BAE;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.legend-item > span {
+  display: flex;
+  align-items: center;
+  color: #CBD5E1;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.legend-item strong {
+  color: #FFFFFF;
+  font-weight: 700;
+  margin-left: 12px;
+}
+
+/* Side Legend List - Tight Label to Value Gap */
+.card-legend-list {
+  flex: 0 1 auto;          /* Don't stretch across remaining space */
+  width: auto;             /* Fit content width naturally */
+  max-width: 220px;        /* Limits max container width */
+  font-size: 12px;
+  color: #8E9BAE;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  justify-content: flex-start; /* Align label and value start-to-end */
+  align-items: center;
+  gap: 16px;                  /* Direct, tight gap between name and count */
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.legend-item > span {
+  display: flex;
+  align-items: center;
+  color: #CBD5E1;
+  flex: 1;                     /* Allows text label to take initial space cleanly */
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.legend-item strong {
+  color: #FFFFFF;
+  font-weight: 700;
+  margin-left: auto;           /* Aligns numbers neatly to the right within the compact list */
+}
+
+/* Bottom Metric Summary Strip under Cards */
+.card-footer-metrics {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(10, 14, 23, 0.8);
+  padding: 8px 12px;
+  border-radius: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 12px;
+  font-size: 10px;
+  color: #8E9BAE;
+}
+
+.card-footer-metrics span {
+  display: block;
+  color: #64748B;
+}
+
+.card-footer-metrics strong {
+  display: block;
+  color: #E2E8F0;
+  font-weight: 700;
+}
+
+.card-footer-metrics .text-green {
+  color: #00FF87;
+}
+
+/* Dual Box Table for Long vs Short */
+.side-ls-table {
+  width: 60%;
+  background: rgba(10, 14, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #8E9BAE;
+}
+
+.side-ls-table .ls-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.side-ls-table .ls-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+}
+
+.side-ls-table strong {
+  color: #00FF87;
+}
+
+/* Key Insights Panel */
+.insights-box {
+  background: linear-gradient(135deg, rgba(11, 22, 28, 0.9), rgba(10, 14, 23, 0.95));
+  border: 1px solid rgba(0, 255, 135, 0.2);
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.insights-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.insight-item.positive { color: #00FF87; }
+.insight-item.warning { color: #FFB703; }
+
+.insights-bg-graphic {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  font-size: 80px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.page-bottom-note {
+  text-align: center;
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 24px;
+}
+/* Key Insights Card Alignment Fix */
+.key-insights-card {
+  position: relative;
+  padding: 24px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Keeps header and list at the top */
+  gap: 16px;                  /* Eliminates vertical gap */
+  overflow: hidden;
+}
+
+.insights-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;                  /* Clean line spacing */
+  z-index: 2;
+}
+
+.insight-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Bottom Right Watermark Icon Fix */
+.insights-watermark {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  color: #00FF87;             /* Neon accent theme color */
+  opacity: 0.25;               /* Perfectly visible watermark */
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.key-insights-card:hover .insights-watermark {
+  opacity: 0.4;
+}
+/* Ensure Horizontal Bar Canvas Container Has Height */
+#emotionChart, #marketChart {
+  min-height: 180px !important;
+  max-height: 220px !important;
+  width: 100% !important;
+}
+
+.chart-body-bar {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Universal Card Footer Uniformity Rule */
+.card-footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 10px 14px !important;
+  background: rgba(10, 14, 23, 0.6) !important;
+  border-radius: 6px !important;
+  margin-top: auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-sizing: border-box !important;
+}
+
+.footer-stat {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 3px !important;
+}
+
+.stat-label {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #8E9BAE !important;
+  text-transform: capitalize !important; /* Forces uniform 'Win Rate', 'Avg R' case */
+  letter-spacing: normal !important;
+}
+
+.stat-val {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  font-family: inherit !important;
+}
+
+.text-green {
+  color: #00FF87 !important;
+}
+
+.text-red {
+  color: #FF4D4D !important;
+}
+
+.text-white {
+  color: #FFFFFF !important;
+}
+/* ==========================================================================
+   ANALYTICS LIGHT MODE ENHANCEMENT: HIGH CONTRAST TYPOGRAPHY & VISIBILITY
+   ========================================================================== */
+
+/* 1. Page Subtitle & Top Filter Bar */
+html.theme-light .page-title-wrap p,
+body.theme-light .page-title-wrap p {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+html.theme-light .date-filter label,
+html.theme-light .topbar-actions span,
+body.theme-light .date-filter label,
+body.theme-light .topbar-actions span {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+html.theme-light .topbar-actions select,
+html.theme-light .topbar-actions input[type="date"],
+body.theme-light .topbar-actions select,
+body.theme-light .topbar-actions input[type="date"] {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+/* 2. Top KPI Metric Cards Text & Subtitles */
+html.theme-light .kpi-card span:first-child,
+html.theme-light .kpi-title,
+body.theme-light .kpi-card span:first-child,
+body.theme-light .kpi-title {
+  color: #475569 !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+}
+
+html.theme-light .kpi-number,
+body.theme-light .kpi-number {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+html.theme-light .kpi-desc,
+html.theme-light .kpi-card span:last-child,
+body.theme-light .kpi-desc,
+body.theme-light .kpi-card span:last-child {
+  color: #475569 !important;
+  font-weight: 600 !important;
+  font-size: 11.5px !important;
+}
+
+/* 3. Section Headings & "View Details" links */
+html.theme-light h3,
+html.theme-light .card-heading,
+body.theme-light h3,
+body.theme-light .card-heading {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+html.theme-light a[class*="view"],
+html.theme-light a[class*="details"],
+html.theme-light .view-details,
+body.theme-light a[class*="view"],
+body.theme-light a[class*="details"],
+body.theme-light .view-details {
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+/* 4. Mini Footer Metric Tables inside each Card */
+html.theme-light .card-footer,
+html.theme-light div[class*="metric-footer"],
+html.theme-light div[class*="card-bottom"],
+body.theme-light .card-footer,
+body.theme-light div[class*="metric-footer"],
+body.theme-light div[class*="card-bottom"] {
+  border-top: 1px solid #e2e8f0 !important;
+  padding-top: 10px !important;
+}
+
+/* Column Labels: Trades, Win Rate, Avg R, Expectancy, Net P&L, Profit Factor */
+html.theme-light div[class*="metric-footer"] span,
+html.theme-light div[class*="card-bottom"] span,
+html.theme-light .analytics-card-metrics span:first-child,
+body.theme-light div[class*="metric-footer"] span,
+body.theme-light div[class*="card-bottom"] span,
+body.theme-light .analytics-card-metrics span:first-child {
+  color: #475569 !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+}
+
+/* Values underneath: 4, 75%, +1.00R, +4.00R, 4.00 */
+html.theme-light div[class*="metric-footer"] strong,
+html.theme-light div[class*="card-bottom"] strong,
+html.theme-light .analytics-card-metrics strong,
+body.theme-light div[class*="metric-footer"] strong,
+body.theme-light div[class*="card-bottom"] strong,
+body.theme-light .analytics-card-metrics strong {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+/* 5. Donut / Pie Center Text & Legend Details */
+html.theme-light .donut-center-text,
+html.theme-light .chart-center-label,
+body.theme-light .donut-center-text,
+body.theme-light .chart-center-label {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+html.theme-light .chart-legend,
+html.theme-light .chart-legend span,
+html.theme-light .legend-item,
+body.theme-light .chart-legend,
+body.theme-light .chart-legend span,
+body.theme-light .legend-item {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}
+
+/* 6. Long vs Short Performance Side Table (Section 10) */
+html.theme-light table,
+html.theme-light table th,
+html.theme-light table td,
+body.theme-light table,
+body.theme-light table th,
+body.theme-light table td {
+  color: #1e293b !important;
+}
+
+html.theme-light table th,
+body.theme-light table th {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+/* 7. Key Insights Section at Bottom */
+html.theme-light .key-insights-card,
+html.theme-light div[class*="insight"],
+body.theme-light .key-insights-card,
+body.theme-light div[class*="insight"] {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+html.theme-light .key-insights-card h4,
+html.theme-light div[class*="insight"] h4,
+body.theme-light .key-insights-card h4,
+body.theme-light div[class*="insight"] h4 {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+html.theme-light .insight-item,
+html.theme-light .key-insights-card p,
+html.theme-light div[class*="insight"] p,
+body.theme-light .insight-item,
+body.theme-light .key-insights-card p,
+body.theme-light div[class*="insight"] p {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+/* ==========================================================================
+   ANALYTICS DUAL-MODE VISIBILITY FIX (CRISP LIGHT & DARK THEMES)
+   ========================================================================== */
+
+/* --- 1. LIGHT MODE CONTRAST & TYPOGRAPHY --- */
+html.theme-light,
+body.theme-light {
+  --bg-page: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f1f5f9;
+  --border-line: #e2e8f0;
+  --border-line-subtle: #f1f5f9;
+  
+  --txt-head: #0f172a;
+  --txt-main: #1e293b;
+  --txt-dim: #475569;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Force clean white background on cards & headers */
+html.theme-light .main-content div[class*="card"],
+html.theme-light .main-content div[class*="box"],
+html.theme-light .main-content section,
+body.theme-light .main-content div[class*="card"],
+body.theme-light .main-content div[class*="box"],
+body.theme-light .main-content section {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Headings & Card Titles */
+html.theme-light .main-content h1,
+html.theme-light .main-content h2,
+html.theme-light .main-content h3,
+html.theme-light .main-content h4,
+body.theme-light .main-content h1,
+body.theme-light .main-content h2,
+body.theme-light .main-content h3,
+body.theme-light .main-content h4 {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+/* Subtitles, Labels & Descriptions */
+html.theme-light .page-title-wrap p,
+html.theme-light .kpi-desc,
+html.theme-light .kpi-title,
+html.theme-light .main-content label,
+html.theme-light .main-content span[class*="label"],
+body.theme-light .page-title-wrap p,
+body.theme-light .kpi-desc,
+body.theme-light .kpi-title,
+body.theme-light .main-content label,
+body.theme-light .main-content span[class*="label"] {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+/* Top KPI Card Big Numbers */
+html.theme-light .kpi-number,
+body.theme-light .kpi-number {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+/* Mini Footer Tables inside Cards (Trades, Win Rate, Avg R, Net P&L, Profit Factor) */
+html.theme-light div[class*="footer"] span,
+html.theme-light div[class*="bottom"] span,
+html.theme-light div[class*="metric"] span:first-child,
+body.theme-light div[class*="footer"] span,
+body.theme-light div[class*="bottom"] span,
+body.theme-light div[class*="metric"] span:first-child {
+  color: #475569 !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+}
+
+html.theme-light div[class*="footer"] strong,
+html.theme-light div[class*="bottom"] strong,
+html.theme-light div[class*="metric"] strong,
+body.theme-light div[class*="footer"] strong,
+body.theme-light div[class*="bottom"] strong,
+body.theme-light div[class*="metric"] strong {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+/* Donut Center "Trades" Text & Legends */
+html.theme-light div[class*="center-text"],
+html.theme-light div[class*="legend"],
+html.theme-light div[class*="legend"] span,
+body.theme-light div[class*="center-text"],
+body.theme-light div[class*="legend"],
+body.theme-light div[class*="legend"] span {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+}
+
+/* "View Details" Link Contrast */
+html.theme-light a[class*="details"],
+html.theme-light a[class*="view"],
+body.theme-light a[class*="details"],
+body.theme-light a[class*="view"] {
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+/* Key Insights Box Text */
+html.theme-light div[class*="insight"] p,
+html.theme-light div[class*="insights"] p,
+body.theme-light div[class*="insight"] p,
+body.theme-light div[class*="insights"] p {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+/* Filter Controls Header Box */
+html.theme-light .topbar-actions,
+body.theme-light .topbar-actions {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+html.theme-light .topbar-actions input,
+html.theme-light .topbar-actions select,
+body.theme-light .topbar-actions input,
+body.theme-light .topbar-actions select {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+/* ===================================================
+   DONUT CENTER TEXT & KEY INSIGHTS CLEANUP
+   =================================================== */
+
+/* 1. Fix Donut Center Number & Text Visibility */
+.donut-center-text,
+.chart-center,
+.chart-center-text,
+div[class*="center-text"],
+div[class*="donut-text"],
+div[class*="center-label"],
+.chart-container span,
+.chart-canvas-wrap span {
+  color: var(--txt-head) !important;
+}
+
+html.theme-light .donut-center-text,
+html.theme-light .chart-center,
+html.theme-light .chart-center-text,
+html.theme-light div[class*="center-text"],
+html.theme-light div[class*="donut-text"],
+html.theme-light div[class*="center-label"],
+html.theme-light .chart-container span,
+html.theme-light .chart-canvas-wrap span,
+body.theme-light .donut-center-text,
+body.theme-light .chart-center,
+body.theme-light .chart-center-text,
+body.theme-light div[class*="center-text"],
+body.theme-light div[class*="donut-text"],
+body.theme-light div[class*="center-label"],
+body.theme-light .chart-container span,
+body.theme-light .chart-canvas-wrap span {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+/* 2. Clean Up Key Insights (Remove Odd Borders & Blue/Green Boxes) */
+.key-insights-card div,
+.key-insights div,
+div[class*="key-insight"] div,
+div[class*="insight-item"],
+div[class*="insight-row"],
+div[class*="key-insights"] p {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 6px 0 !important;
+  margin: 4px 0 !important;
+}
+
+/* Key Insights Text Legibility */
+html.theme-light div[class*="insight"] p,
+html.theme-light div[class*="key-insight"] span,
+body.theme-light div[class*="insight"] p,
+body.theme-light div[class*="key-insight"] span {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+}
+/* Ensure HTML overlay center numbers & text are dark slate in Light Mode */
+html.theme-light .donut-center-wrap *,
+html.theme-light div[class*="donut"] span,
+html.theme-light div[class*="donut"] h2,
+html.theme-light div[class*="donut"] h3,
+html.theme-light div[class*="donut"] strong,
+html.theme-light div[class*="chart"] .center-text,
+html.theme-light div[class*="chart"] .center-number,
+body.theme-light .donut-center-wrap *,
+body.theme-light div[class*="donut"] span,
+body.theme-light div[class*="donut"] h2,
+body.theme-light div[class*="donut"] h3,
+body.theme-light div[class*="donut"] strong,
+body.theme-light div[class*="chart"] .center-text,
+body.theme-light div[class*="chart"] .center-number {
+  color: #0f172a !important;
+}
+
+html.theme-light .chart-sublabel,
+body.theme-light .chart-sublabel {
+  color: #64748b !important;
+}
