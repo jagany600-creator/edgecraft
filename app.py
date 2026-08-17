@@ -434,6 +434,7 @@ def update_trade(trade_id):
         trade.direction = str(data.get('direction', trade.direction or 'Long'))
         trade.session = str(data.get('session', trade.session or 'New York'))
         trade.setup = str(data.get('setup', trade.setup or '30Min S/R'))
+        trade.market_condition = str(data.get('market_condition', 'Trending'))
 
         # Safe Float Conversion (Prevents TypeError on empty inputs)
         trade.lot_size = float(data.get('lot_size') or 0.10)
