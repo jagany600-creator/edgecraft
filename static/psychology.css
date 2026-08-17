@@ -528,3 +528,9 @@ body {
   cursor: pointer;
 }
 .btn-journal-link:hover { background: #6366f1; color: #ffffff; }
+.main-content, main {
+  flex: 1;
+  padding: 24px 32px; /* Ensure padding matches analytics */
+  max-width: 100%;
+  box-sizing: border-box;
+}
