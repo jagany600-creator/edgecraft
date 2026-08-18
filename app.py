@@ -420,9 +420,15 @@ def get_trades():
     return jsonify(trade_list)
 
 
-# Initialize Database Tables
 with app.app_context():
     db.create_all()
+    try:
+        from sqlalchemy import text
+        with db.engine.connect() as conn:
+            conn.execute(text("ALTER TABLE trade ADD COLUMN IF NOT EXISTS user_id INTEGER;"))
+            conn.commit()
+    except Exception as e:
+        print("Migration notice:", e)
     # API Endpoint to Delete a Trade by ID
 @app.route('/api/trades/<int:trade_id>', methods=['DELETE'])
 def delete_trade(trade_id):
