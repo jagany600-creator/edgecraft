@@ -107,37 +107,49 @@ window.addEventListener('load', syncSidebarProfile);
   const authForm = document.getElementById('authForm');
   if (authForm) {
     authForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const endpoint = isLoginMode ? '/api/login' : '/api/register';
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const emailInput = document.getElementById('email');
+    const email = emailInput ? emailInput.value.trim() : '';
+    const endpoint = isLoginMode ? '/api/login' : '/api/register';
 
-      submitBtn.disabled = true;
-      submitBtn.querySelector('span').textContent = isLoginMode ? 'Authenticating...' : 'Creating Account...';
+    submitBtn.disabled = true;
+    submitBtn.querySelector('span').textContent = isLoginMode ? 'Authenticating...' : 'Creating Account...';
 
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
+    try {
+      const payload = isLoginMode ? { username, password } : { username, email, password };
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (response.ok) {
-          if (isLoginMode) {
-            alert(`Welcome back, ${data.user.username}!`);
-            window.location.href = '/dashboard';
-          } else {
-            alert('Account created successfully! Switching to login...');
+      if (response.ok) {
+        if (isLoginMode) {
+          window.location.href = '/dashboard';
+        } else {
+          alert('Account created successfully! Please sign in with your credentials.');
+          if (toggleAuthModeBtn) {
             toggleAuthModeBtn.click();
           }
-        } else {
-          alert(`Error: ${data.error}`);
+          if (emailInput) emailInput.value = '';
+          document.getElementById('password').value = '';
         }
-      } catch (err) {
-        console.error('API Error:', err);
+      } else {
+        alert(data.message || data.error || 'Authentication failed.');
+      }
+    } catch (err) {
+      console.error('API Error:', err);
+      alert('Server error. Check if backend is running.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.querySelector('span').textContent = isLoginMode ? 'Login' : 'Register Account';
+    }
+  });
         alert('Server error. Check if Flask backend is running.');
       } finally {
         submitBtn.disabled = false;

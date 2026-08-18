@@ -29,7 +29,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 class Trade(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     # 1. Basic Information
     trade_date = db.Column(db.String(20), nullable=False)
     day_of_week = db.Column(db.String(15), nullable=False)
@@ -188,13 +188,9 @@ def api_register():
     db.session.add(user)
     db.session.commit()
 
-    session['user_id'] = user.id
-    session['username'] = user.username
-    session['email'] = user.email
-
     return jsonify({
         'success': True,
-        'user': {'id': user.id, 'username': user.username, 'email': user.email, 'avatar': user.avatar_url}
+        'message': 'Account created successfully! Please sign in.'
     }), 201
 
 @app.route('/api/login', methods=['POST'])
@@ -274,6 +270,9 @@ def api_google_login():
 # API Endpoint to Create a New Trade
 @app.route('/api/trades', methods=['POST'])
 def create_trade():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 401
+    
     data = request.json
     
     # Extract Numeric Execution Values
@@ -299,6 +298,7 @@ def create_trade():
         result_status = "Breakeven"
 
     new_trade = Trade(
+        user_id=session['user_id'],
         trade_date=data.get('trade_date', datetime.utcnow().strftime('%b %d, %Y')),
         day_of_week=data.get('day_of_week', 'Sunday'),
         symbol=data.get('symbol', 'XAUUSD'),
@@ -344,15 +344,18 @@ def create_trade():
     return jsonify({'status': 'success', 'message': 'Trade saved successfully!', 'id': new_trade.id}), 201
 
 
-# API Endpoint to Fetch All Logged Trades
-@app.route('/api/trades', methods=['GET'])
-# API Endpoint to Fetch All Logged Trades with Optional Date Range Filtering
+# API Endpoint to Fetch All Logged Trades for the Active User
 @app.route('/api/trades', methods=['GET'])
 def get_trades():
+    if 'user_id' not in session:
+        return jsonify([]), 401
+
     start_date_str = request.args.get('start_date')
     end_date_str = request.args.get('end_date')
 
-    trades = Trade.query.order_by(Trade.created_at.desc()).all()
+    # Filter strictly by the currently logged-in user's ID
+    current_user_id = session['user_id']
+    trades = Trade.query.filter_by(user_id=current_user_id).order_by(Trade.id.desc()).all()
 
     # Apply date range filtering if dates are provided
     if start_date_str and end_date_str:
