@@ -405,15 +405,6 @@ def get_trades():
 # Initialize Database Tables
 with app.app_context():
     db.create_all()
-    with app.app_context():
-       db.create_all()
-    # Safely adds the new column to existing database
-    try:
-        with db.engine.connect() as conn:
-            conn.execute(db.text("ALTER TABLE trade ADD COLUMN market_condition VARCHAR(50) DEFAULT 'Trending'"))
-            conn.commit()
-    except Exception:
-        pass  # Column already exists
     # API Endpoint to Delete a Trade by ID
 @app.route('/api/trades/<int:trade_id>', methods=['DELETE'])
 def delete_trade(trade_id):
