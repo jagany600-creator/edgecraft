@@ -745,6 +745,19 @@ def disconnect_google_account():
 def delete_account():
     session.clear()
     return jsonify({"success": True, "message": "Account deleted successfully."})
+# Temporary Admin Route to Wipe Live Cloud Trades
+@app.route('/admin/wipe-all-trades-now', methods=['GET'])
+def admin_wipe_trades():
+    try:
+        deleted_count = db.session.query(Trade).delete()
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': f'Successfully wiped {deleted_count} trades from Render database.'
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 # IMPORTANT: ALL ROUTES MUST BE ABOVE THIS LINE
 import os
 
