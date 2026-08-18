@@ -97,7 +97,22 @@ def index():
 def dashboard():
     if 'user_id' not in session:
         return redirect('/')
-    return render_template('dashboard.html', username=session.get('username', 'Trader'))
+    user = User.query.get(session['user_id'])
+    display_name = user.username.split()[0] if user and user.username else 'Trader'
+    return render_template('dashboard.html', user=user, display_name=display_name, username=session.get('username', 'Trader'))
+
+@app.route('/api/user/profile')
+def get_user_profile():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 401
+    user = User.query.get(session['user_id'])
+    display_name = user.username.split()[0] if user and user.username else 'Trader'
+    return jsonify({
+        'username': user.username if user else 'Trader',
+        'display_name': display_name,
+        'email': user.email if user else '',
+        'avatar_url': user.avatar_url or '/static/bull-3d.png'
+    })
 
 # 3. Habit Tracker Page Route
 @app.route('/habits')

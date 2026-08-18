@@ -899,3 +899,45 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshDashboard();
   });
 });
+// Load Dynamic User Greeting and Sidebar Profile
+async function loadDynamicUserHeader() {
+  try {
+    const res = await fetch('/api/user/profile');
+    if (!res.ok) return;
+    const user = await res.json();
+
+    // 1. Calculate time-of-day greeting
+    const hour = new Date().getHours();
+    let timeGreeting = 'Good Morning';
+    if (hour >= 12 && hour < 17) {
+      timeGreeting = 'Good Afternoon';
+    } else if (hour >= 17) {
+      timeGreeting = 'Good Evening';
+    }
+
+    // 2. Set dynamic greeting on Dashboard (e.g. "Good Evening, Jagan! 👋")
+    const greetingEl = document.getElementById('dynamicGreeting');
+    if (greetingEl) {
+      greetingEl.innerHTML = `${timeGreeting}, ${user.display_name}! 👋`;
+    }
+
+    // 3. Update Sidebar Profile Card Name
+    const sidebarName = document.querySelector('.user-profile-info .user-name') || document.getElementById('sidebarUserName');
+    if (sidebarName) {
+      sidebarName.textContent = user.username;
+    }
+
+    // 4. Update Sidebar Avatar
+    const sidebarAvatar = document.querySelector('.user-profile-card img');
+    if (sidebarAvatar && user.avatar_url) {
+      sidebarAvatar.src = user.avatar_url;
+    }
+  } catch (err) {
+    console.error('Error fetching user profile:', err);
+  }
+}
+
+// Ensure it runs when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  loadDynamicUserHeader();
+});
