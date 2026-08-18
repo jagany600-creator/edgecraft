@@ -520,15 +520,25 @@ from datetime import datetime
 # API Endpoint for Analytics with Date Range Filtering
 @app.route('/api/analytics', methods=['GET'])
 def get_analytics():
+    if 'user_id' not in session:
+        return jsonify({
+            'total_trades': 0,
+            'win_rate': 0.0,
+            'avg_r': 0.0,
+            'expectancy': 0.0,
+            'net_pnl': 0.0,
+            'profit_factor': 0.0
+        }), 401
+
     try:
         start_date_str = request.args.get('start_date')
         end_date_str = request.args.get('end_date')
 
-        query = Trade.query
+        current_user_id = session['user_id']
+        query = Trade.query.filter_by(user_id=current_user_id)
 
-        # Fetch all trades and filter in Python for safe string/date matching
+        # Fetch trades strictly for the logged-in user
         trades = query.all()
-
         if start_date_str and end_date_str:
             try:
                 s_date = datetime.strptime(start_date_str, '%Y-%m-%d')
