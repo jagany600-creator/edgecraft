@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 Authlib
 requests
 gunicorn
+psycopg2-binary
