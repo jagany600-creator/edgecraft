@@ -416,50 +416,51 @@
     });
   </script>
  <!-- Dynamic EdgeCraft Forgot Password Modal -->
-  <div id="forgotPasswordModal" class="ec-modal-backdrop" style="display: none;">
-    <div class="ec-modal-card">
-      <button type="button" class="ec-close-btn" onclick="closeForgotModal()">&times;</button>
+  <div id="forgotPasswordModal" style="display: none; position: fixed; inset: 0; background: rgba(4, 7, 15, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); align-items: center; justify-content: center; z-index: 10000; padding: 16px;">
+    <div style="background: linear-gradient(145deg, rgba(17, 24, 39, 0.98), rgba(11, 15, 25, 0.99)); border: 1px solid rgba(16, 185, 129, 0.3); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(16, 185, 129, 0.15); border-radius: 20px; width: 100%; max-width: 420px; padding: 32px 28px; position: relative; box-sizing: border-box;">
+      
+      <button type="button" onclick="closeForgotModal()" style="position: absolute; top: 16px; right: 18px; background: transparent; border: none; color: #64748b; font-size: 24px; line-height: 1; cursor: pointer;">&times;</button>
       
       <!-- Feedback Message Box -->
-      <div id="modalNotice" class="ec-notice" style="display: none;"></div>
+      <div id="modalNotice" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; text-align: center;"></div>
 
       <!-- Step 1: Enter Email -->
       <div id="otpStep1">
-        <div class="ec-modal-header">
-          <div class="ec-modal-icon">🔒</div>
-          <h3 class="ec-modal-title">Reset Password</h3>
-          <p class="ec-modal-sub">Enter your registered email and we'll send a 6-digit verification code.</p>
+        <div style="text-align: center; margin-bottom: 22px;">
+          <div style="font-size: 28px; margin-bottom: 8px;">🔒</div>
+          <h3 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0 0 6px 0;">Reset Password</h3>
+          <p style="color: #94a3b8; font-size: 13px; line-height: 1.45; margin: 0;">Enter your registered email and we'll send a 6-digit verification code.</p>
         </div>
 
-        <div class="ec-input-group">
-          <label class="ec-label">Email Address</label>
-          <input type="email" id="resetEmail" placeholder="trader@example.com" class="ec-input" autocomplete="email">
+        <div style="margin-bottom: 16px; text-align: left;">
+          <label style="display: block; color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Email Address</label>
+          <input type="email" id="resetEmail" placeholder="trader@example.com" style="width: 100%; box-sizing: border-box; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 12px 14px; color: #ffffff; font-size: 14px; outline: none;" autocomplete="email">
         </div>
 
-        <button type="button" id="sendOtpBtn" class="ec-submit-btn" onclick="handleSendOtp()">
+        <button type="button" id="sendOtpBtn" onclick="handleSendOtp()" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); transition: all 0.2s ease;">
           <span>Send Verification Code</span> &rarr;
         </button>
       </div>
 
       <!-- Step 2: Enter OTP & New Password -->
       <div id="otpStep2" style="display: none;">
-        <div class="ec-modal-header">
-          <div class="ec-modal-icon">⚡</div>
-          <h3 class="ec-modal-title">Verify & Update</h3>
-          <p class="ec-modal-sub">Enter the 6-digit code sent to your inbox and choose a new password.</p>
+        <div style="text-align: center; margin-bottom: 22px;">
+          <div style="font-size: 28px; margin-bottom: 8px;">⚡</div>
+          <h3 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0 0 6px 0;">Verify & Update</h3>
+          <p style="color: #94a3b8; font-size: 13px; line-height: 1.45; margin: 0;">Enter the 6-digit code sent to your inbox and choose a new password.</p>
         </div>
 
-        <div class="ec-input-group">
-          <label class="ec-label">6-Digit OTP Code</label>
-          <input type="text" id="resetOtp" placeholder="••••••" maxlength="6" class="ec-input ec-otp-input">
+        <div style="margin-bottom: 16px; text-align: left;">
+          <label style="display: block; color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">6-Digit OTP Code</label>
+          <input type="text" id="resetOtp" placeholder="••••••" maxlength="6" style="width: 100%; box-sizing: border-box; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 12px 14px; color: #10b981; font-size: 20px; font-weight: 700; font-family: monospace; letter-spacing: 8px; text-align: center; outline: none;">
         </div>
 
-        <div class="ec-input-group">
-          <label class="ec-label">New Password</label>
-          <input type="password" id="resetNewPass" placeholder="Enter new strong password" class="ec-input">
+        <div style="margin-bottom: 16px; text-align: left;">
+          <label style="display: block; color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">New Password</label>
+          <input type="password" id="resetNewPass" placeholder="Enter new strong password" style="width: 100%; box-sizing: border-box; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 12px 14px; color: #ffffff; font-size: 14px; outline: none;">
         </div>
 
-        <button type="button" id="verifyResetBtn" class="ec-submit-btn" onclick="handleVerifyReset()">
+        <button type="button" id="verifyResetBtn" onclick="handleVerifyReset()" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); transition: all 0.2s ease;">
           <span>Update Password</span> &rarr;
         </button>
 
@@ -469,21 +470,6 @@
       </div>
     </div>
   </div>
-
-  <script>
-    function showNotice(msg, isError = false) {
-      const notice = document.getElementById('modalNotice');
-      if (notice) {
-        notice.textContent = msg;
-        notice.className = 'ec-notice ' + (isError ? 'error' : 'success');
-        notice.style.display = 'block';
-      }
-    }
-
-    function clearNotice() {
-      const notice = document.getElementById('modalNotice');
-      if (notice) notice.style.display = 'none';
-    }
 
     function openForgotModal(e) {
       if (e) e.preventDefault();

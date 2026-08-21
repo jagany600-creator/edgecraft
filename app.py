@@ -1,11 +1,15 @@
 import os
-from flask import Flask, render_template, request, jsonify, session
+import smtplib
+import random
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, session, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from authlib.integrations.flask_client import OAuth
 app = Flask(__name__)
+otp_storage = {}
 app.secret_key = 'edgecraft_secret_key'
 
 # Connect to Neon PostgreSQL in production, SQLite locally
@@ -872,7 +876,98 @@ def reset_password():
 
     return jsonify({'success': True, 'message': 'Password reset successfully! You can now log in.'}), 200
 # IMPORTANT: ALL ROUTES MUST BE ABOVE THIS LINE
-import os
+# -----------------------------------------------------------
+# DYNAMIC OTP FORGOT PASSWORD ENDPOINTS
+# -----------------------------------------------------------
+@app.route('/api/forgot-password/send-otp', methods=['POST'])
+def send_forgot_otp():
+    data = request.get_json() or {}
+    email = data.get('email', '').strip().lower()
+
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    # 1. Verify user exists in the database
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'No registered account found with this email address.'}), 404
+
+    # 2. Generate a 6-digit OTP
+    otp_code = f"{random.randint(100000, 999999)}"
+    otp_storage[email] = otp_code
+
+    # 3. Read SMTP credentials from environment
+    mail_user = os.environ.get('MAIL_USERNAME')
+    mail_pass = os.environ.get('MAIL_PASSWORD')
+
+    if not mail_user or not mail_pass:
+        return jsonify({'error': 'Server email credentials (SMTP) are not configured.'}), 500
+
+    # 4. Dispatch email dynamically to the user's registered inbox
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = 'EdgeCraft - Password Reset Verification Code'
+        msg['From'] = f"EdgeCraft Security <{mail_user}>"
+        msg['To'] = email
+
+        html_content = f"""
+        <div style="background-color: #0b0f19; padding: 40px 20px; font-family: 'Segoe UI', Arial, sans-serif; color: #e2e8f0;">
+          <div style="max-width: 480px; margin: 0 auto; background: #131b2e; border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <h2 style="color: #10b981; font-size: 24px; font-weight: 800; letter-spacing: 1px; margin: 0;">EDGECRAFT</h2>
+              <p style="color: #64748b; font-size: 13px; margin-top: 4px;">Master Your Execution</p>
+            </div>
+            <h3 style="color: #ffffff; font-size: 18px; margin-bottom: 8px;">Password Reset Request</h3>
+            <p style="color: #94a3b8; font-size: 14px; line-height: 1.5; margin-bottom: 24px;">
+              Use the 6-digit verification code below to reset your account password. This code is valid for 10 minutes.
+            </p>
+            <div style="text-align: center; background: rgba(16, 185, 129, 0.08); border: 1px dashed #10b981; border-radius: 12px; padding: 18px; margin-bottom: 24px;">
+              <span style="font-size: 32px; font-weight: 700; letter-spacing: 8px; color: #10b981; font-family: monospace;">{otp_code}</span>
+            </div>
+            <p style="color: #64748b; font-size: 12px; line-height: 1.4; margin: 0;">
+              If you did not request this password reset, you can safely ignore this email.
+            </p>
+          </div>
+        </div>
+        """
+        msg.attach(MIMEText(html_content, 'html'))
+
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(mail_user, mail_pass)
+            server.sendmail(mail_user, email, msg.as_string())
+
+        return jsonify({'message': f'A 6-digit verification code has been sent to {email}'}), 200
+
+    except Exception as e:
+        print(f"SMTP Error: {e}")
+        return jsonify({'error': f'Failed to send email: {str(e)}'}), 500
+
+
+@app.route('/api/forgot-password/reset', methods=['POST'])
+def reset_forgot_password():
+    data = request.get_json() or {}
+    email = data.get('email', '').strip().lower()
+    otp = data.get('otp', '').strip()
+    new_password = data.get('new_password', '').strip()
+
+    if not email or not otp or not new_password:
+        return jsonify({'error': 'All fields are required.'}), 400
+
+    saved_otp = otp_storage.get(email)
+    if not saved_otp or str(saved_otp) != str(otp):
+        return jsonify({'error': 'Invalid or expired OTP code.'}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'User account not found.'}), 404
+
+    # Update password hash in database
+    user.password_hash = generate_password_hash(new_password)
+    db.session.commit()
+
+    # Clear OTP once used
+    otp_storage.pop(email, None)
+    return jsonify({'message': 'Password updated successfully! Please log in.'}), 200
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
