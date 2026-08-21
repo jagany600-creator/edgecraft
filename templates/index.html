@@ -471,6 +471,29 @@
     </div>
   </div>
 
+  <script>
+    function showNotice(msg, isError) {
+      const notice = document.getElementById('modalNotice');
+      if (notice) {
+        notice.textContent = msg;
+        notice.style.display = 'block';
+        if (isError) {
+          notice.style.background = 'rgba(239, 68, 68, 0.15)';
+          notice.style.border = '1px solid #ef4444';
+          notice.style.color = '#fca5a5';
+        } else {
+          notice.style.background = 'rgba(16, 185, 129, 0.15)';
+          notice.style.border = '1px solid #10b981';
+          notice.style.color = '#6ee7b7';
+        }
+      }
+    }
+
+    function clearNotice() {
+      const notice = document.getElementById('modalNotice');
+      if (notice) notice.style.display = 'none';
+    }
+
     function openForgotModal(e) {
       if (e) e.preventDefault();
       clearNotice();
@@ -515,12 +538,12 @@
 
         if (res.ok) {
           switchStep(2);
-          showNotice(data.message || 'OTP sent successfully! Check your inbox.');
+          showNotice(data.message || 'OTP sent successfully! Check your inbox.', false);
         } else {
           showNotice(data.error || 'Failed to send OTP.', true);
         }
       } catch (err) {
-        showNotice('Network error. Check connection.', true);
+        showNotice('Network error. Check server logs.', true);
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<span>Send Verification Code</span> &rarr;';
