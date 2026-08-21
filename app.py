@@ -1,4 +1,5 @@
 import os
+import socket
 import smtplib
 import random
 from email.mime.text import MIMEText
@@ -880,22 +881,27 @@ def reset_password():
     return jsonify({'success': True, 'message': 'Password reset successfully! You can now log in.'}), 200
 # IMPORTANT: ALL ROUTES MUST BE ABOVE THIS LINE
 # -----------------------------------------------------------
+# DYNAMIC OTP FORGOT PASSWORD ENDPOINT (FORCED IPv4 + DB RECONNECT)
 # -----------------------------------------------------------
-# DYNAMIC OTP FORGOT PASSWORD ENDPOINTS
 @app.route('/api/forgot-password/send-otp', methods=['POST'])
 def send_forgot_otp():
     data = request.get_json() or {}
     email = data.get('email', '').strip().lower()
 
     if not email:
-        return jsonify({'error': 'Email is required.'}), 400
+        return jsonify({'error': 'Email address is required.'}), 400
 
-    # 1. Check user existence
-    user = User.query.filter_by(email=email).first()
+    # 1. Query user with safe database session retry
+    try:
+        user = User.query.filter_by(email=email).first()
+    except Exception:
+        db.session.rollback()
+        user = User.query.filter_by(email=email).first()
+
     if not user:
-        return jsonify({'error': 'No registered account found with this email.'}), 404
+        return jsonify({'error': 'No account registered with this email address.'}), 404
 
-    # 2. Generate OTP
+    # 2. Generate 6-digit OTP
     otp_code = f"{random.randint(100000, 999999)}"
     otp_storage[email] = otp_code
 
@@ -904,16 +910,16 @@ def send_forgot_otp():
     mail_pass = os.environ.get('MAIL_PASSWORD', '').strip().replace(' ', '')
 
     if not mail_user or not mail_pass:
-        return jsonify({'error': 'SMTP credentials not found in server environment.'}), 500
+        return jsonify({'error': 'Server environment missing MAIL_USERNAME or MAIL_PASSWORD.'}), 500
 
-    # 4. Dispatch Email
+    # 4. Dispatch Email over forced IPv4
     try:
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'EdgeCraft - Password Reset Verification Code'
         msg['From'] = f"EdgeCraft Security <{mail_user}>"
         msg['To'] = email
 
-        html_content = f"""
+        html_body = f"""
         <div style="background-color: #0b0f19; padding: 40px 20px; font-family: 'Segoe UI', Arial, sans-serif; color: #e2e8f0;">
           <div style="max-width: 480px; margin: 0 auto; background: #131b2e; border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
             <div style="text-align: center; margin-bottom: 24px;">
@@ -933,21 +939,20 @@ def send_forgot_otp():
           </div>
         </div>
         """
-        msg.attach(MIMEText(html_content, 'html'))
+        msg.attach(MIMEText(html_body, 'html'))
 
-        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=15)
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-        server.login(mail_user, mail_pass)
-        server.sendmail(mail_user, email, msg.as_string())
-        server.quit()
+        # Resolve IPv4 specifically to prevent [Errno 101] Network is unreachable on Render
+        smtp_ip = socket.gethostbyname('smtp.gmail.com')
+
+        with smtplib.SMTP_SSL(smtp_ip, 465, timeout=12) as server:
+            server.login(mail_user, mail_pass)
+            server.sendmail(mail_user, [email], msg.as_string())
 
         return jsonify({'message': f'Verification code sent to {email}'}), 200
 
     except Exception as e:
-        print(f"SMTP Error: {repr(e)}")
-        return jsonify({'error': f'Failed to send email: {str(e)}'}), 500
+        print(f"CRITICAL SMTP DISPATCH ERROR: {repr(e)}")
+        return jsonify({'error': f'Delivery error: {str(e)}'}), 500
 
 @app.route('/api/forgot-password/reset', methods=['POST'])
 def reset_forgot_password():
