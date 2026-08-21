@@ -877,6 +877,7 @@ def reset_password():
     return jsonify({'success': True, 'message': 'Password reset successfully! You can now log in.'}), 200
 # IMPORTANT: ALL ROUTES MUST BE ABOVE THIS LINE
 # -----------------------------------------------------------
+# -----------------------------------------------------------
 # DYNAMIC OTP FORGOT PASSWORD ENDPOINTS
 # -----------------------------------------------------------
 @app.route('/api/forgot-password/send-otp', methods=['POST'])
@@ -885,25 +886,25 @@ def send_forgot_otp():
     email = data.get('email', '').strip().lower()
 
     if not email:
-        return jsonify({'error': 'Email is required'}), 400
+        return jsonify({'error': 'Email is required.'}), 400
 
-    # 1. Verify user exists in the database
+    # 1. Verify user exists
     user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({'error': 'No registered account found with this email address.'}), 404
 
-    # 2. Generate a 6-digit OTP
+    # 2. Generate 6-digit OTP
     otp_code = f"{random.randint(100000, 999999)}"
     otp_storage[email] = otp_code
 
-    # 3. Read SMTP credentials from environment
-    mail_user = os.environ.get('MAIL_USERNAME')
-    mail_pass = os.environ.get('MAIL_PASSWORD')
+    # 3. Read SMTP credentials
+    mail_user = os.environ.get('MAIL_USERNAME', '').strip()
+    mail_pass = os.environ.get('MAIL_PASSWORD', '').strip().replace(' ', '')
 
     if not mail_user or not mail_pass:
-        return jsonify({'error': 'Server email credentials (SMTP) are not configured.'}), 500
+        return jsonify({'error': 'SMTP credentials are not detected by server environment.'}), 500
 
-    # 4. Dispatch email dynamically to the user's registered inbox
+    # 4. Dispatch Email dynamically
     try:
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'EdgeCraft - Password Reset Verification Code'
@@ -932,11 +933,11 @@ def send_forgot_otp():
         """
         msg.attach(MIMEText(html_content, 'html'))
 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=10) as server:
             server.login(mail_user, mail_pass)
             server.sendmail(mail_user, email, msg.as_string())
 
-        return jsonify({'message': f'A 6-digit verification code has been sent to {email}'}), 200
+        return jsonify({'message': f'Verification code sent to {email}'}), 200
 
     except Exception as e:
         print(f"SMTP Error: {e}")
