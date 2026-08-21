@@ -882,7 +882,6 @@ def reset_password():
 # -----------------------------------------------------------
 # -----------------------------------------------------------
 # DYNAMIC OTP FORGOT PASSWORD ENDPOINTS
-# -----------------------------------------------------------
 @app.route('/api/forgot-password/send-otp', methods=['POST'])
 def send_forgot_otp():
     data = request.get_json() or {}
@@ -891,12 +890,12 @@ def send_forgot_otp():
     if not email:
         return jsonify({'error': 'Email is required.'}), 400
 
-    # 1. Verify user exists
+    # 1. Check user existence
     user = User.query.filter_by(email=email).first()
     if not user:
-        return jsonify({'error': 'No registered account found with this email address.'}), 404
+        return jsonify({'error': 'No registered account found with this email.'}), 404
 
-    # 2. Generate 6-digit OTP
+    # 2. Generate OTP
     otp_code = f"{random.randint(100000, 999999)}"
     otp_storage[email] = otp_code
 
@@ -905,9 +904,9 @@ def send_forgot_otp():
     mail_pass = os.environ.get('MAIL_PASSWORD', '').strip().replace(' ', '')
 
     if not mail_user or not mail_pass:
-        return jsonify({'error': 'SMTP credentials are not detected by server environment.'}), 500
+        return jsonify({'error': 'SMTP credentials not found in server environment.'}), 500
 
-    # 4. Dispatch Email dynamically
+    # 4. Dispatch Email
     try:
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'EdgeCraft - Password Reset Verification Code'
@@ -935,12 +934,14 @@ def send_forgot_otp():
         </div>
         """
         msg.attach(MIMEText(html_content, 'html'))
-with smtplib.SMTP('smtp.gmail.com', 587, timeout=15) as server:
-            server.ehlo()
-            server.starttls()
-            server.ehlo()
-            server.login(mail_user, mail_pass)
-            server.sendmail(mail_user, email, msg.as_string())
+
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=15)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(mail_user, mail_pass)
+        server.sendmail(mail_user, email, msg.as_string())
+        server.quit()
 
         return jsonify({'message': f'Verification code sent to {email}'}), 200
 
