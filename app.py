@@ -935,17 +935,18 @@ def send_forgot_otp():
         </div>
         """
         msg.attach(MIMEText(html_content, 'html'))
-
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=10) as server:
+with smtplib.SMTP('smtp.gmail.com', 587, timeout=15) as server:
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
             server.login(mail_user, mail_pass)
             server.sendmail(mail_user, email, msg.as_string())
 
         return jsonify({'message': f'Verification code sent to {email}'}), 200
 
     except Exception as e:
-        print(f"SMTP Error: {e}")
+        print(f"SMTP Error: {repr(e)}")
         return jsonify({'error': f'Failed to send email: {str(e)}'}), 500
-
 
 @app.route('/api/forgot-password/reset', methods=['POST'])
 def reset_forgot_password():
