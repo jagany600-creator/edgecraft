@@ -774,7 +774,103 @@ def disconnect_google_account():
 def delete_account():
     session.clear()
     return jsonify({"success": True, "message": "Account deleted successfully."})
+# ==========================================
+# FORGOT PASSWORD & OTP EMAIL SYSTEM
+# ==========================================
+import random
+import time
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
+# In-memory temporary store for OTPs: { email: { 'otp': '123456', 'expires_at': timestamp } }
+otp_storage = {}
+
+def send_otp_email(to_email, otp_code):
+    smtp_email = os.environ.get('MAIL_USERNAME', 'your_email@gmail.com')
+    smtp_password = os.environ.get('MAIL_PASSWORD', 'your_app_password')
+
+    msg = MIMEMultipart()
+    msg['From'] = f"EdgeCraft Support <{smtp_email}>"
+    msg['To'] = to_email
+    msg['Subject'] = f"{otp_code} is your EdgeCraft Password Reset OTP"
+
+    body = f"""Hello,
+
+You requested a password reset for your EdgeCraft account.
+
+Your 6-digit Verification Code is:
+{otp_code}
+
+This code will expire in 10 minutes. If you did not request this, please ignore this email.
+
+Best regards,
+EdgeCraft Security Team"""
+    
+    msg.attach(MIMEText(body, 'plain'))
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        server.login(smtp_email, smtp_password)
+        server.sendmail(smtp_email, to_email, msg.as_string())
+
+
+@app.route('/api/forgot-password/send-otp', methods=['POST'])
+def send_otp():
+    data = request.get_json(silent=True) or {}
+    email = data.get('email', '').strip().lower()
+
+    if not email:
+        return jsonify({'error': 'Please provide an email address.'}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'No account found with this email address.'}), 404
+
+    # Generate 6-digit random numeric OTP
+    otp = f"{random.randint(100000, 999999)}"
+    otp_storage[email] = {
+        'otp': otp,
+        'expires_at': time.time() + 600  # 10 minute expiration
+    }
+
+    try:
+        send_otp_email(email, otp)
+        return jsonify({'success': True, 'message': 'OTP sent successfully to your email.'}), 200
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return jsonify({'error': 'Failed to send OTP email. Verify SMTP credentials.'}), 500
+
+
+@app.route('/api/forgot-password/reset', methods=['POST'])
+def reset_password():
+    data = request.get_json(silent=True) or {}
+    email = data.get('email', '').strip().lower()
+    otp_input = data.get('otp', '').strip()
+    new_password = data.get('new_password', '').strip()
+
+    if not email or not otp_input or not new_password:
+        return jsonify({'error': 'All fields are required.'}), 400
+
+    record = otp_storage.get(email)
+    if not record:
+        return jsonify({'error': 'No OTP request found. Please request a new OTP.'}), 400
+
+    if time.time() > record['expires_at']:
+        otp_storage.pop(email, None)
+        return jsonify({'error': 'OTP has expired. Please request a new one.'}), 400
+
+    if record['otp'] != otp_input:
+        return jsonify({'error': 'Invalid OTP code.'}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'User not found.'}), 404
+
+    user.password_hash = generate_password_hash(new_password)
+    db.session.commit()
+    otp_storage.pop(email, None)
+
+    return jsonify({'success': True, 'message': 'Password reset successfully! You can now log in.'}), 200
 # IMPORTANT: ALL ROUTES MUST BE ABOVE THIS LINE
 import os
 

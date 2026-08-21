@@ -188,5 +188,119 @@ window.addEventListener('load', syncSidebarProfile);
         googleBtn.style.opacity = '1';
       }
     });
-  }
-});
+    // ==========================================
+    // FORGOT PASSWORD / OTP MODAL LOGIC
+    // ==========================================
+    const forgotPassWrapper = document.getElementById('forgotPassWrapper');
+    const forgotModal = document.getElementById('forgotPasswordModal');
+    const closeForgotModal = document.getElementById('closeForgotModal');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const verifyResetBtn = document.getElementById('verifyResetBtn');
+    const otpStep1 = document.getElementById('otpStep1');
+    const otpStep2 = document.getElementById('otpStep2');
+    const resetEmailInput = document.getElementById('resetEmail');
+
+    // 1. Open Modal
+    if (forgotPassWrapper) {
+      forgotPassWrapper.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (forgotModal) {
+          forgotModal.style.display = 'flex';
+          otpStep1.style.display = 'block';
+          otpStep2.style.display = 'none';
+          const currentInput = document.getElementById('username')?.value || '';
+          resetEmailInput.value = currentInput.includes('@') ? currentInput : '';
+        }
+      });
+    }
+
+    // 2. Close Modal
+    if (closeForgotModal) {
+      closeForgotModal.addEventListener('click', () => {
+        forgotModal.style.display = 'none';
+      });
+    }
+
+    window.addEventListener('click', (e) => {
+      if (e.target === forgotModal) {
+        forgotModal.style.display = 'none';
+      }
+    });
+
+    // 3. Request OTP
+    if (sendOtpBtn) {
+      sendOtpBtn.addEventListener('click', async () => {
+        const email = resetEmailInput.value.trim();
+        if (!email) {
+          alert('Please enter your registered email address.');
+          return;
+        }
+
+        sendOtpBtn.disabled = true;
+        sendOtpBtn.querySelector('span').textContent = 'Sending OTP...';
+
+        try {
+          const res = await fetch('/api/forgot-password/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            alert(data.message || 'OTP sent! Check your inbox.');
+            otpStep1.style.display = 'none';
+            otpStep2.style.display = 'block';
+          } else {
+            alert(data.error || 'Unable to send OTP.');
+          }
+        } catch (err) {
+          console.error('OTP Send Error:', err);
+          alert('Network error while requesting OTP.');
+        } finally {
+          sendOtpBtn.disabled = false;
+          sendOtpBtn.querySelector('span').textContent = 'Send OTP';
+        }
+      });
+    }
+
+    // 4. Verify OTP & Reset Password
+    if (verifyResetBtn) {
+      verifyResetBtn.addEventListener('click', async () => {
+        const email = resetEmailInput.value.trim();
+        const otp = document.getElementById('resetOtp').value.trim();
+        const new_password = document.getElementById('resetNewPass').value.trim();
+
+        if (!otp || !new_password) {
+          alert('Please enter both the OTP and your new password.');
+          return;
+        }
+
+        verifyResetBtn.disabled = true;
+        verifyResetBtn.querySelector('span').textContent = 'Updating...';
+
+        try {
+          const res = await fetch('/api/forgot-password/reset', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, otp, new_password })
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            alert(data.message || 'Password updated successfully! Please log in.');
+            forgotModal.style.display = 'none';
+            document.getElementById('resetOtp').value = '';
+            document.getElementById('resetNewPass').value = '';
+          } else {
+            alert(data.error || 'Failed to reset password.');
+          }
+        } catch (err) {
+          console.error('Reset Password Error:', err);
+          alert('Network error while resetting password.');
+        } finally {
+      verifyResetBtn.disabled = false;
+      verifyResetBtn.querySelector('span').textContent = 'Update Password';
+    }
+  });
+}
