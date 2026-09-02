@@ -86,10 +86,9 @@ class Trade(db.Model):
     lesson_learned = db.Column(db.Text, nullable=True)
 
     # 7. Evidence
-    before_screenshot = db.Column(db.String(255), nullable=True)
-    during_screenshot = db.Column(db.String(255), nullable=True)
-    after_screenshot = db.Column(db.String(255), nullable=True)
-
+    before_screenshot = db.Column(db.Text, nullable=True)
+    during_screenshot = db.Column(db.Text, nullable=True)
+    after_screenshot = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
