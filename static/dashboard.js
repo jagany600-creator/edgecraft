@@ -991,7 +991,6 @@ function updateHabitScore(period = 'month') {
     let totalChecks = 0;
 
     filteredLogs.forEach(entry => {
-      // Handles single boolean check-ins or object-based habit routines
       if (typeof entry.completed === 'boolean') {
         totalChecks++;
         if (entry.completed) completedCount++;
@@ -1008,9 +1007,28 @@ function updateHabitScore(period = 'month') {
     }
   }
 
-  // Update Hero score element
-  const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
-  if (scoreValueEl) {
-    scoreValueEl.textContent = `${score}/100`;
+  // Target every possible DOM element for the habit score text
+  const scoreElements = [
+    document.querySelector('.habit-score-hero .score-value'),
+    document.getElementById('habitScoreVal'),
+    document.querySelector('.habit-score-value'),
+    ...document.querySelectorAll('div, span, h2, h3')
+  ];
+
+  // Primary targeted update
+  let targetEl = document.querySelector('.habit-score-hero .score-value') || 
+                 document.getElementById('habitScoreVal') || 
+                 document.querySelector('.score-circle span') ||
+                 document.querySelector('.habit-score-card .score');
+
+  if (targetEl) {
+    targetEl.textContent = `${score}/100`;
+  } else {
+    // Fallback search for hardcoded text node matching format XX/100
+    const allElements = Array.from(document.querySelectorAll('*'));
+    const scoreNode = allElements.find(el => el.children.length === 0 && /\d+\s*\/\s*100/.test(el.textContent));
+    if (scoreNode) {
+      scoreNode.textContent = `${score}/100`;
+    }
   }
 }
