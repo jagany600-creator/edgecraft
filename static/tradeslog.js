@@ -299,7 +299,7 @@ const updateDay = (dateStr) => {
         day_of_week: document.getElementById('dayOfWeek')?.value || 'Sunday',
         symbol: document.getElementById('symbol')?.value || 'XAUUSD',
         direction: document.getElementById('direction')?.value || 'Long',
-        session: document.getElementById('session')?.value || 'New York',
+        session: document.getElementById('session')?.value || 'New York Open',
         setup: document.getElementById('setup')?.value || '30Min S/R',
         market_condition: document.getElementById('marketCondition')?.value || 'Trending',
         
