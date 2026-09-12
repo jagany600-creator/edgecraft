@@ -952,29 +952,40 @@ async function loadDynamicUserHeader() {
 function updateHabitScore(period = 'month') {
   const habitLogs = JSON.parse(localStorage.getItem('edgecraft_habits') || '[]');
   const now = new Date();
-  let startDate;
+  let startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  let endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
   if (period === 'today') {
     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
   } else if (period === 'week') {
     const dayOfWeek = now.getDay();
     startDate = new Date(now);
     startDate.setDate(now.getDate() - dayOfWeek);
     startDate.setHours(0, 0, 0, 0);
+    endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 6);
+    endDate.setHours(23, 59, 59, 999);
   } else if (period === 'month') {
     startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
   } else if (period === 'year') {
     startDate = new Date(now.getFullYear(), 0, 1);
+    endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
   }
 
-  const filteredLogs = habitLogs.filter(log => new Date(log.date) >= startDate);
+  const filteredLogs = habitLogs.filter(log => {
+    const logDate = new Date(log.date);
+    return logDate >= startDate && logDate <= endDate;
+  });
 
   let score = 0;
   if (filteredLogs.length > 0) {
     const totalCompleted = filteredLogs.reduce((acc, log) => acc + (log.completed ? 1 : 0), 0);
     score = Math.round((totalCompleted / filteredLogs.length) * 100);
   }
-const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
+
+  const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
   if (scoreValueEl) {
     scoreValueEl.textContent = `${score}/100`;
   }
