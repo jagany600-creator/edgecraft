@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('symbol').value = 'XAUUSD';
     document.getElementById('direction').value = 'Long';
-    document.getElementById('session').value = 'New York';
+    document.getElementById('session').value = 'New York Open';
     document.getElementById('setup').value = '30Min S/R';
     if (document.getElementById('marketCondition')) {
       document.getElementById('marketCondition').value = 'Trending';
