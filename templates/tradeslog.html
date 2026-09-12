@@ -435,28 +435,73 @@
             </div>
           </div>
 
-          <!-- Section 7: Evidence -->
-          <div class="glass-box form-section">
-            <h3 class="section-title">7. Evidence (Screenshots)</h3>
-            <div class="form-grid grid-3">
-              <div class="form-group upload-card">
-                <label>Before Entry</label>
-                <input type="file" id="beforeImg" accept="image/*" class="file-input-hidden" />
-                <div id="beforePreview" class="img-upload-box">Click or Drag Image Here</div>
-              </div>
-              <div class="form-group upload-card">
-                <label>During Trade</label>
-                <input type="file" id="duringImg" accept="image/*" class="file-input-hidden" />
-                <div id="duringPreview" class="img-upload-box">Click or Drag Image Here</div>
-              </div>
-              <div class="form-group upload-card">
-                <label>After Exit</label>
-                <input type="file" id="afterImg" accept="image/*" class="file-input-hidden" />
-                <div id="afterPreview" class="img-upload-box">Click or Drag Image Here</div>
+         <!-- Section 7: Evidence (Screenshots) -->
+        <div class="glass-box form-section">
+          <h3 class="section-title">7. Evidence (Screenshots)</h3>
+          <div class="form-grid grid-3">
+
+            <!-- BEFORE ENTRY -->
+            <div class="form-group upload-card">
+              <label>Before Entry</label>
+              <div class="image-upload-card" id="card-before">
+                <input type="file" id="beforeImg" accept="image/*" class="file-input-hidden" onchange="handleFileSelect(event, 'before')" />
+                <div class="upload-placeholder" id="placeholder-before" onclick="document.getElementById('beforeImg').click()">
+                  Click or Drag Image Here
+                </div>
+                <div class="preview-container" id="preview-box-before" style="display: none;">
+                  <img id="img-before" src="" alt="Before Entry">
+                  <div class="image-overlay">
+                    <button type="button" class="action-btn view-btn" onclick="openLightbox('img-before')">👁️ View</button>
+                    <button type="button" class="action-btn delete-btn" onclick="removeImage('before')">🗑️ Delete</button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
+            <!-- DURING TRADE -->
+            <div class="form-group upload-card">
+              <label>During Trade</label>
+              <div class="image-upload-card" id="card-during">
+                <input type="file" id="duringImg" accept="image/*" class="file-input-hidden" onchange="handleFileSelect(event, 'during')" />
+                <div class="upload-placeholder" id="placeholder-during" onclick="document.getElementById('duringImg').click()">
+                  Click or Drag Image Here
+                </div>
+                <div class="preview-container" id="preview-box-during" style="display: none;">
+                  <img id="img-during" src="" alt="During Trade">
+                  <div class="image-overlay">
+                    <button type="button" class="action-btn view-btn" onclick="openLightbox('img-during')">👁️ View</button>
+                    <button type="button" class="action-btn delete-btn" onclick="removeImage('during')">🗑️ Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AFTER EXIT -->
+            <div class="form-group upload-card">
+              <label>After Exit</label>
+              <div class="image-upload-card" id="card-after">
+                <input type="file" id="afterImg" accept="image/*" class="file-input-hidden" onchange="handleFileSelect(event, 'after')" />
+                <div class="upload-placeholder" id="placeholder-after" onclick="document.getElementById('afterImg').click()">
+                  Click or Drag Image Here
+                </div>
+                <div class="preview-container" id="preview-box-after" style="display: none;">
+                  <img id="img-after" src="" alt="After Exit">
+                  <div class="image-overlay">
+                    <button type="button" class="action-btn view-btn" onclick="openLightbox('img-after')">👁️ View</button>
+                    <button type="button" class="action-btn delete-btn" onclick="removeImage('after')">🗑️ Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Fullscreen Lightbox Modal -->
+        <div id="lightbox-modal" class="lightbox-modal" onclick="closeLightbox()">
+          <span class="lightbox-close">&times;</span>
+          <img class="lightbox-content" id="lightbox-img">
+        </div>
           <div class="form-footer-actions">
             <button type="button" id="saveTradeBtn" class="btn-primary-purple">Save Trade</button>
           </div>

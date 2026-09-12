@@ -286,34 +286,6 @@ const updateDay = (dateStr) => {
     });
   });
 
-  // Image Upload Bindings
-  const bindUpload = (inputId, previewId, key) => {
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
-    if (!input || !preview) return;
-
-    preview.addEventListener('click', () => input.click());
-
-    input.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          screenshots[key] = evt.target.result;
-          preview.style.backgroundImage = `url(${evt.target.result})`;
-          preview.style.backgroundSize = 'cover';
-          preview.style.backgroundPosition = 'center';
-          preview.textContent = '';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  };
-
-  bindUpload('beforeImg', 'beforePreview', 'before');
-  bindUpload('duringImg', 'duringPreview', 'during');
-  bindUpload('afterImg', 'afterPreview', 'after');
-
   // Save Trade Action (Handles both Create [POST] & Edit [PUT])
   if (saveTradeBtn) {
     saveTradeBtn.addEventListener('click', async (e) => {
@@ -360,9 +332,9 @@ const updateDay = (dateStr) => {
         what_went_wrong: document.getElementById('whatWentWrong')?.value || '',
         lesson_learned: document.getElementById('lessonLearned')?.value || '',
 
-        before_screenshot: screenshots.before,
-        during_screenshot: screenshots.during,
-        after_screenshot: screenshots.after
+        before_screenshot: tradeScreenshots.before,
+        during_screenshot: tradeScreenshots.during,
+        after_screenshot: tradeScreenshots.after
       };
 
       const editingId = editingTradeIdInput?.value;
@@ -639,3 +611,73 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+// ==========================================
+// Screenshot State & Overlay Handlers
+// ==========================================
+
+const tradeScreenshots = {
+  before: null,
+  during: null,
+  after: null
+};
+
+window.handleFileSelect = function(event, type) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function (e) {
+    const img = new Image();
+    img.src = e.target.result;
+    img.onload = function () {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 1280;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > MAX_WIDTH) {
+        height = Math.round((height * MAX_WIDTH) / width);
+        width = MAX_WIDTH;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Compress to JPEG (~100-150KB)
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+      // Save payload to global state
+      tradeScreenshots[type] = compressedBase64;
+
+      // Update UI
+      document.getElementById(`img-${type}`).src = compressedBase64;
+      document.getElementById(`placeholder-${type}`).style.display = 'none';
+      document.getElementById(`preview-box-${type}`).style.display = 'block';
+    };
+  };
+};
+
+window.removeImage = function(type) {
+  tradeScreenshots[type] = null;
+  
+  const inputId = type === 'before' ? 'beforeImg' : type === 'during' ? 'duringImg' : 'afterImg';
+  const fileInput = document.getElementById(inputId);
+  if (fileInput) fileInput.value = '';
+
+  document.getElementById(`img-${type}`).src = '';
+  document.getElementById(`preview-box-${type}`).style.display = 'none';
+  document.getElementById(`placeholder-${type}`).style.display = 'flex';
+};
+
+window.openLightbox = function(imgId) {
+  const imgSrc = document.getElementById(imgId).src;
+  document.getElementById('lightbox-img').src = imgSrc;
+  document.getElementById('lightbox-modal').style.display = 'flex';
+};
+
+window.closeLightbox = function() {
+  document.getElementById('lightbox-modal').style.display = 'none';
+};
