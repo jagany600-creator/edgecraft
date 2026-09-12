@@ -958,8 +958,6 @@ loadDynamicUserHeader();
 function updateHabitScore(period = 'month') {
   const habitLogs = JSON.parse(localStorage.getItem('edgecraft_habits') || '[]');
   const now = new Date();
-  
-  // Normalize period input from select dropdown
   const normalizedPeriod = (period || 'month').toLowerCase().replace('this ', '').trim();
   
   let startDate;
@@ -979,18 +977,38 @@ function updateHabitScore(period = 'month') {
     startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
   }
 
+  // Filter logs strictly within date range
   const filteredLogs = habitLogs.filter(log => {
+    if (!log.date) return false;
     const logDate = new Date(log.date);
     return logDate >= startDate && logDate <= endDate;
   });
 
   let score = 0;
+
   if (filteredLogs.length > 0) {
-    const totalCompleted = filteredLogs.reduce((acc, log) => acc + (log.completed ? 1 : 0), 0);
-    score = Math.round((totalCompleted / filteredLogs.length) * 100);
+    let completedCount = 0;
+    let totalChecks = 0;
+
+    filteredLogs.forEach(entry => {
+      // Handles single boolean check-ins or object-based habit routines
+      if (typeof entry.completed === 'boolean') {
+        totalChecks++;
+        if (entry.completed) completedCount++;
+      } else if (entry.habits && typeof entry.habits === 'object') {
+        Object.values(entry.habits).forEach(val => {
+          totalChecks++;
+          if (val === true || val === 'completed' || val === 1) completedCount++;
+        });
+      }
+    });
+
+    if (totalChecks > 0) {
+      score = Math.round((completedCount / totalChecks) * 100);
+    }
   }
 
-  // Update hero score display
+  // Update Hero score element
   const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
   if (scoreValueEl) {
     scoreValueEl.textContent = `${score}/100`;
