@@ -53,8 +53,7 @@ const greetingEl = document.querySelector('.dashboard-main h1') || document.quer
         updateHabitScore(selectedPeriod);
       }
     });
-
-  // 2. DATA INGESTION (TRADES & HABITS)
+  }
   async function fetchTrades() {
     try {
       const res = await fetch('/api/trades');
@@ -911,7 +910,6 @@ const greetingEl = document.querySelector('.dashboard-main h1') || document.quer
     allTrades = trades;
     refreshDashboard();
   });
-});
 // Load Dynamic User Greeting and Sidebar Profile
 async function loadDynamicUserHeader() {
   try {
@@ -947,9 +945,7 @@ async function loadDynamicUserHeader() {
     }
   } catch (err) {
     console.error('Error fetching user profile:', err);
-  }
-}
-console.error('Error fetching user profile:', err);
+  console.error('Error fetching user profile:', err);
   }
 }
 
@@ -978,14 +974,12 @@ function updateHabitScore(period = 'month') {
     const totalCompleted = filteredLogs.reduce((acc, log) => acc + (log.completed ? 1 : 0), 0);
     score = Math.round((totalCompleted / filteredLogs.length) * 100);
   }
-
-  const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
+const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
   if (scoreValueEl) {
     scoreValueEl.textContent = `${score}/100`;
   }
 }
 
-// Ensure it runs when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  loadDynamicUserHeader();
+// Ensure dynamic header loads and close main listener
+loadDynamicUserHeader();
 });
