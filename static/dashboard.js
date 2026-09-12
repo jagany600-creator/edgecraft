@@ -44,15 +44,18 @@ const greetingEl = document.querySelector('.dashboard-main h1') || document.quer
   // Safe execution of greeting on load
   renderDynamicGreeting();
 
-  // Habit Score Timeframe Filter Listener (Safely guarded)
-  const habitTimeframeSelect = document.getElementById('habitTimeframe');
+  /// Habit Score Timeframe Filter Listener (Safely guarded)
+  const habitTimeframeSelect = document.getElementById('habitTimeframe') || document.querySelector('.habit-score-hero select');
   if (habitTimeframeSelect) {
+    // Run initial score calculation on page load
+    updateHabitScore(habitTimeframeSelect.value);
+
     habitTimeframeSelect.addEventListener('change', (e) => {
-      const selectedPeriod = e.target.value;
-      if (typeof updateHabitScore === 'function') {
-        updateHabitScore(selectedPeriod);
-      }
+      updateHabitScore(e.target.value);
     });
+  } else {
+    // Fallback initial calculation
+    updateHabitScore('month');
   }
   async function fetchTrades() {
     try {
@@ -952,26 +955,25 @@ async function loadDynamicUserHeader() {
 function updateHabitScore(period = 'month') {
   const habitLogs = JSON.parse(localStorage.getItem('edgecraft_habits') || '[]');
   const now = new Date();
-  let startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-  let endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+  
+  // Normalize period input from select dropdown
+  const normalizedPeriod = (period || 'month').toLowerCase().replace('this ', '').trim();
+  
+  let startDate;
+  let endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-  if (period === 'today') {
-    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-  } else if (period === 'week') {
+  if (normalizedPeriod === 'today') {
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+  } else if (normalizedPeriod === 'week') {
     const dayOfWeek = now.getDay();
     startDate = new Date(now);
     startDate.setDate(now.getDate() - dayOfWeek);
     startDate.setHours(0, 0, 0, 0);
-    endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 6);
-    endDate.setHours(23, 59, 59, 999);
-  } else if (period === 'month') {
-    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-  } else if (period === 'year') {
-    startDate = new Date(now.getFullYear(), 0, 1);
-    endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+  } else if (normalizedPeriod === 'year') {
+    startDate = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
+  } else {
+    // Default to 'month'
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
   }
 
   const filteredLogs = habitLogs.filter(log => {
@@ -985,6 +987,7 @@ function updateHabitScore(period = 'month') {
     score = Math.round((totalCompleted / filteredLogs.length) * 100);
   }
 
+  // Update hero score display
   const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
   if (scoreValueEl) {
     scoreValueEl.textContent = `${score}/100`;
