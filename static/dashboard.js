@@ -2,22 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let allTrades = [];
   let currentCalDate = new Date(); // Active displayed month for P&L calendar
 
-  // Habit Score Timeframe Filter Listener
-  const habitTimeframeSelect = document.getElementById('habitTimeframe');
-  if (habitTimeframeSelect) {
-    habitTimeframeSelect.addEventListener('change', (e) => {
-      const selectedPeriod = e.target.value;
-      if (typeof updateHabitScore === 'function') {
-        updateHabitScore(selectedPeriod);
-      }
-    });
-  }
-
   // 1. DYNAMIC USER PROFILE & TIME-BASED GREETING
   function renderDynamicGreeting() {
-    let fullName = 'Trader'; // Default placeholder until custom name is retrieved
-
-    // Check saved user profile in localStorage / API
+    let fullName = 'Trader';
     const storedUser = localStorage.getItem('edgecraft_user') || localStorage.getItem('profile_data');
     if (storedUser) {
       try {
@@ -27,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error parsing user profile:", e);
       }
     }
-    }
 
     const hour = new Date().getHours();
     let timeGreeting = 'Good Morning';
@@ -35,22 +21,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (hour >= 12 && hour < 17) {
       timeGreeting = 'Good Afternoon';
-      icon = '👋';
+      icon = '☀️';
     } else if (hour >= 17 && hour < 21) {
       timeGreeting = 'Good Evening';
-      icon = '🌆';
+      icon = '🌙';
     } else if (hour >= 21 || hour < 5) {
       timeGreeting = 'Good Night';
       icon = '🌙';
     }
-
-    const greetingEl = document.getElementById('dynamicGreeting');
+const greetingEl = document.querySelector('.dashboard-main h1') || document.querySelector('h1');
     if (greetingEl) {
-      greetingEl.textContent = `${timeGreeting}, ${fullName}! ${icon}`;
+      greetingEl.innerHTML = `${timeGreeting}, ${fullName}! ${icon}`;
     }
 
+    // Update sidebar profile name dynamically inside greeting function
     const sidebarNameEl = document.getElementById('dashSidebarName');
-    if (sidebarNameEl) sidebarNameEl.textContent = fullName.split(' ')[0].toUpperCase();
+    if (sidebarNameEl) {
+      sidebarNameEl.textContent = fullName.split(' ')[0].toUpperCase();
+    }
+  }
+
+  // Safe execution of greeting on load
+  renderDynamicGreeting();
+
+  // Habit Score Timeframe Filter Listener (Safely guarded)
+  const habitTimeframeSelect = document.getElementById('habitTimeframe');
+  if (habitTimeframeSelect) {
+    habitTimeframeSelect.addEventListener('change', (e) => {
+      const selectedPeriod = e.target.value;
+      if (typeof updateHabitScore === 'function') {
+        updateHabitScore(selectedPeriod);
+      }
+    });
   }
 
   // 2. DATA INGESTION (TRADES & HABITS)
