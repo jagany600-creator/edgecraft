@@ -951,7 +951,10 @@ async function loadDynamicUserHeader() {
   console.error('Error fetching user profile:', err);
   }
 }
-
+// Ensure dynamic header loads and close main listener
+loadDynamicUserHeader();
+});
+// Habit Score Calculation (Global Scope)
 function updateHabitScore(period = 'month') {
   const habitLogs = JSON.parse(localStorage.getItem('edgecraft_habits') || '[]');
   const now = new Date();
@@ -993,7 +996,3 @@ function updateHabitScore(period = 'month') {
     scoreValueEl.textContent = `${score}/100`;
   }
 }
-
-// Ensure dynamic header loads and close main listener
-loadDynamicUserHeader();
-});
