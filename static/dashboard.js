@@ -2,19 +2,31 @@ document.addEventListener('DOMContentLoaded', () => {
   let allTrades = [];
   let currentCalDate = new Date(); // Active displayed month for P&L calendar
 
+  // Habit Score Timeframe Filter Listener
+  const habitTimeframeSelect = document.getElementById('habitTimeframe');
+  if (habitTimeframeSelect) {
+    habitTimeframeSelect.addEventListener('change', (e) => {
+      const selectedPeriod = e.target.value;
+      if (typeof updateHabitScore === 'function') {
+        updateHabitScore(selectedPeriod);
+      }
+    });
+  }
+
   // 1. DYNAMIC USER PROFILE & TIME-BASED GREETING
   function renderDynamicGreeting() {
-    let fullName = 'Jagan';
-    
+    let fullName = 'Trader'; // Default placeholder until custom name is retrieved
+
     // Check saved user profile in localStorage / API
     const storedUser = localStorage.getItem('edgecraft_user') || localStorage.getItem('profile_data');
     if (storedUser) {
       try {
         const u = JSON.parse(storedUser);
-        if (u.fullName || u.full_name) fullName = u.fullName || u.full_name;
-        else if (u.firstName && u.lastName) fullName = `${u.firstName} ${u.lastName}`;
-        else if (u.name) fullName = u.name;
-      } catch (e) {}
+        fullName = u.fullName || u.full_name || u.firstName || u.name || fullName;
+      } catch (e) {
+        console.error("Error parsing user profile:", e);
+      }
+    }
     }
 
     const hour = new Date().getHours();
