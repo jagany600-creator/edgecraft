@@ -53,7 +53,6 @@ const greetingEl = document.querySelector('.dashboard-main h1') || document.quer
         updateHabitScore(selectedPeriod);
       }
     });
-  }
 
   // 2. DATA INGESTION (TRADES & HABITS)
   async function fetchTrades() {
@@ -948,6 +947,41 @@ async function loadDynamicUserHeader() {
     }
   } catch (err) {
     console.error('Error fetching user profile:', err);
+  }
+}
+console.error('Error fetching user profile:', err);
+  }
+}
+
+function updateHabitScore(period = 'month') {
+  const habitLogs = JSON.parse(localStorage.getItem('edgecraft_habits') || '[]');
+  const now = new Date();
+  let startDate;
+
+  if (period === 'today') {
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  } else if (period === 'week') {
+    const dayOfWeek = now.getDay();
+    startDate = new Date(now);
+    startDate.setDate(now.getDate() - dayOfWeek);
+    startDate.setHours(0, 0, 0, 0);
+  } else if (period === 'month') {
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (period === 'year') {
+    startDate = new Date(now.getFullYear(), 0, 1);
+  }
+
+  const filteredLogs = habitLogs.filter(log => new Date(log.date) >= startDate);
+
+  let score = 0;
+  if (filteredLogs.length > 0) {
+    const totalCompleted = filteredLogs.reduce((acc, log) => acc + (log.completed ? 1 : 0), 0);
+    score = Math.round((totalCompleted / filteredLogs.length) * 100);
+  }
+
+  const scoreValueEl = document.querySelector('.habit-score-hero .score-value') || document.getElementById('habitScoreVal');
+  if (scoreValueEl) {
+    scoreValueEl.textContent = `${score}/100`;
   }
 }
 
