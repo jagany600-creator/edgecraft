@@ -1,3 +1,32 @@
+// Compress chart screenshots before saving to prevent payload bloat (~250-350KB target)
+function compressChartImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      const img = new Image();
+      img.src = e.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1600; // Keeps candlestick charts sharp
+        let scale = 1;
+
+        if (img.width > MAX_WIDTH) {
+          scale = MAX_WIDTH / img.width;
+        }
+
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Quality 0.75 drops file size down to ~250-350KB
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+    };
+  });
+}
 // Safe Storage Wrapper to prevent Tracking Prevention runtime crashes
 const safeStorage = {
   getItem: (key) => {
@@ -652,42 +681,49 @@ function clearTradeImageState() {
   });
 }
 window.handleFileSelect = function(event, type) {
-  const file = event.target.files[0];
-  if (!file) return;
+    const file = event.target.files[0];
+    if (!file) return;
 
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = function (e) {
-    const img = new Image();
-    img.src = e.target.result;
-    img.onload = function () {
-      const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 1280;
-      let width = img.width;
-      let height = img.height;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 1200;
+            let width = img.width;
+            let height = img.height;
 
-      if (width > MAX_WIDTH) {
-        height = Math.round((height * MAX_WIDTH) / width);
-        width = MAX_WIDTH;
-      }
+            if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width);
+                width = MAX_WIDTH;
+            }
 
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
 
-      // Compress to JPEG (~100-150KB)
-      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            // Compress image to lightweight base64 JPEG (~150-250KB)
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
 
-      // Save payload to global state
-      tradeScreenshots[type] = compressedBase64;
+            // Save payload to global state
+            if (typeof tradeScreenshots !== 'undefined') {
+                tradeScreenshots[type] = compressedBase64;
+            }
 
-      // Update UI
-      document.getElementById(`img-${type}`).src = compressedBase64;
-      document.getElementById(`placeholder-${type}`).style.display = 'none';
-      document.getElementById(`preview-box-${type}`).style.display = 'block';
+            // Update UI Previews
+            const imgElem = document.getElementById(`img-${type}`);
+            if (imgElem) imgElem.src = compressedBase64;
+
+            const placeholderElem = document.getElementById(`placeholder-${type}`);
+            if (placeholderElem) placeholderElem.style.display = 'none';
+
+            const previewBoxElem = document.getElementById(`preview-box-${type}`);
+            if (previewBoxElem) previewBoxElem.style.display = 'block';
+        };
+        img.src = e.target.result;
     };
-  };
+    reader.readAsDataURL(file);
 };
 
 window.removeImage = function(type) {

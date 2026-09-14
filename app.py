@@ -1,4 +1,5 @@
 import os
+import json
 import socket
 import smtplib
 import random
@@ -10,6 +11,8 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from authlib.integrations.flask_client import OAuth
 app = Flask(__name__)
+# Allow up to 16MB requests so multiple screenshots submit without server drops
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 otp_storage = {}
 app.secret_key = 'edgecraft_secret_key'
 
