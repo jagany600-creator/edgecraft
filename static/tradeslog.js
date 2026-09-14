@@ -307,7 +307,7 @@ const updateDay = (dateStr) => {
   });
 
   // Save Trade Action (Handles both Create [POST] & Edit [PUT])
-  const saveTradeBtn = document.getElementById('saveTradeBtn');
+  saveTradeBtn = document.getElementById('saveTradeBtn') || saveTradeBtn;    
 
   if (saveTradeBtn) {
     saveTradeBtn.onclick = async function (e) {
