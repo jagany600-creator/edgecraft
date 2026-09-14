@@ -306,66 +306,54 @@ const updateDay = (dateStr) => {
     });
   });
 
-  /// Save Trade Action (Handles both Create [POST] & Edit [PUT])
-if (saveTradeBtn) {
-  saveTradeBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
+  // Save Trade Action (Handles both Create [POST] & Edit [PUT])
+  const saveTradeBtn = document.getElementById('saveTradeBtn');
 
-    // CLEAR STATE BEFORE BUILDING PAYLOAD IF NOT EDITING
-    if (!editingId) {
-      clearTradeImageState();
-    }
-      const rawDate = document.getElementById('tradeDate')?.value || new Date().toISOString().split('T')[0];
-      const formattedDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+  if (saveTradeBtn) {
+    saveTradeBtn.onclick = async function (e) {
+      e.preventDefault();
+      console.log("Save Trade clicked!");
 
-      const tradeData = {
-        trade_date: formattedDate,
-        day_of_week: document.getElementById('dayOfWeek')?.value || 'Sunday',
-        symbol: document.getElementById('symbol')?.value || 'XAUUSD',
-        direction: document.getElementById('direction')?.value || 'Long',
-        session: document.getElementById('session')?.value || 'New York Open',
-        setup: document.getElementById('setup')?.value || '30Min S/R',
-        market_condition: document.getElementById('marketCondition')?.value || 'Trending',
-        
-        lot_size: parseFloat(document.getElementById('lotSize')?.value) || 0.10,
-        entry_price: parseFloat(document.getElementById('entryPrice')?.value) || 0.0,
-        stop_loss: parseFloat(document.getElementById('stopLoss')?.value) || 0.0,
-        take_profit: parseFloat(document.getElementById('takeProfit')?.value) || 0.0,
-        exit_price: parseFloat(document.getElementById('exitPrice')?.value) || 0.0,
-        entry_time: document.getElementById('entryTime')?.value || '',
-        exit_time: document.getElementById('exitTime')?.value || '',
+      if (saveTradeBtn.disabled) return;
 
-        risk_percent: parseFloat(document.getElementById('riskPercent')?.value) || 1.0,
-        planned_risk: parseFloat(document.getElementById('plannedRisk')?.value) || 100.0,
-
-        emotion_before: document.getElementById('emotionBefore')?.value || 'Calm',
-        emotion_during: document.getElementById('emotionDuring')?.value || 'Calm',
-        emotion_after: document.getElementById('emotionAfter')?.value || 'Calm',
-        confidence_level: parseInt(document.getElementById('confidenceLevel')?.value) || 8,
-        stress_level: parseInt(document.getElementById('stressLevel')?.value) || 3,
-        fomo_level: parseInt(document.getElementById('fomoLevel')?.value) || 2,
-
-        follow_plan: disciplineState.followPlan,
-        exit_early: disciplineState.aPlusSetup,
-        follow_checklist: disciplineState.respectRisk,
-        overtraded: disciplineState.exactExecution,
-        move_stop: disciplineState.repeatTrade,
-
-        trade_notes: document.getElementById('tradeNotes')?.value || '',
-        what_went_well: document.getElementById('whatWentWell')?.value || '',
-        what_went_wrong: document.getElementById('whatWentWrong')?.value || '',
-        lesson_learned: document.getElementById('lessonLearned')?.value || '',
-
-        before_screenshot: tradeScreenshots.before,
-        during_screenshot: tradeScreenshots.during,
-        after_screenshot: tradeScreenshots.after
-      };
-
-      const editingId = editingTradeIdInput?.value;
-      const url = editingId ? `/api/trades/${editingId}` : '/api/trades';
-      const method = editingId ? 'PUT' : 'POST';
+      const originalText = saveTradeBtn.textContent;
+      saveTradeBtn.disabled = true;
+      saveTradeBtn.style.opacity = '0.6';
+      saveTradeBtn.style.cursor = 'not-allowed';
+      saveTradeBtn.textContent = 'Saving...';
 
       try {
+        if (!editingId) {
+          if (typeof clearTradeImageState === 'function') clearTradeImageState();
+        }
+
+        const rawDate = document.getElementById('tradeDate')?.value || new Date().toISOString().split('T')[0];
+        const formattedDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+
+        const tradeData = {
+          trade_date: formattedDate,
+          day_of_week: document.getElementById('dayOfWeek')?.value || 'Sunday',
+          symbol: document.getElementById('symbol')?.value || 'XAUUSD',
+          direction: document.getElementById('direction')?.value || 'Long',
+          session: document.getElementById('session')?.value || 'New York Open',
+          setup: document.getElementById('setup')?.value || '30Min S/R',
+          market_condition: document.getElementById('marketCondition')?.value || 'Trending',
+          lot_size: parseFloat(document.getElementById('lotSize')?.value) || 0.10,
+          entry_price: parseFloat(document.getElementById('entryPrice')?.value) || 0.0,
+          stop_loss: parseFloat(document.getElementById('stopLoss')?.value) || 0.0,
+          take_profit: parseFloat(document.getElementById('takeProfit')?.value) || 0.0,
+          exit_price: parseFloat(document.getElementById('exitPrice')?.value) || 0.0,
+          entry_time: document.getElementById('entryTime')?.value || '',
+          exit_time: document.getElementById('exitTime')?.value || '',
+          risk_percent: parseFloat(document.getElementById('riskPercent')?.value) || 1.0,
+          planned_risk: parseFloat(document.getElementById('plannedRisk')?.value) || 100.0,
+          pnl: parseFloat(document.getElementById('pnl')?.value) || 0.0,
+          screenshots: typeof tradeScreenshots !== 'undefined' ? tradeScreenshots : {}
+        };
+
+        const url = editingId ? `/api/trades/${editingId}` : '/api/trades';
+        const method = editingId ? 'PUT' : 'POST';
+
         const response = await fetch(url, {
           method: method,
           headers: { 'Content-Type': 'application/json' },
@@ -376,18 +364,24 @@ if (saveTradeBtn) {
 
         if (response.ok) {
           showToast(editingId ? 'Trade updated successfully!' : 'Trade logged successfully!', 'success');
-          addTradeFormView.style.display = 'none';
-          tradesListView.style.display = 'block';
-          clearTradeImageState();
-          fetchAndRenderTrades();
+          if (addTradeFormView) addTradeFormView.style.display = 'none';
+          if (tradesListView) tradesListView.style.display = 'block';
+
+          if (typeof clearTradeImageState === 'function') clearTradeImageState();
+          if (typeof fetchAndRenderTrades === 'function') fetchAndRenderTrades();
         } else {
           showToast(resData.message || 'Failed to save trade.', 'error');
         }
       } catch (err) {
         console.error('Error saving trade:', err);
         showToast('Server connection error.', 'error');
+      } finally {
+        saveTradeBtn.disabled = false;
+        saveTradeBtn.style.opacity = '1';
+        saveTradeBtn.style.cursor = 'pointer';
+        saveTradeBtn.textContent = originalText;
       }
-    });
+    };
   }
 
   // Delete Modal Confirmation Handlers
