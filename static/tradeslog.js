@@ -1,3 +1,6 @@
+// Global state for trade editing and screenshots
+let editingId = null;
+let tradeScreenshots = { before: null, during: null, after: null };
 // Compress chart screenshots before saving to prevent payload bloat (~250-350KB target)
 function compressChartImage(file) {
   return new Promise((resolve) => {
@@ -349,7 +352,7 @@ const updateDay = (dateStr) => {
       saveTradeBtn.textContent = 'Saving...';
 
       try {
-        if (!editingId) {
+        if (typeof editingId !== 'undefined' && !editingId) {
           if (typeof clearTradeImageState === 'function') clearTradeImageState();
         }
 
