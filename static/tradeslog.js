@@ -286,9 +286,8 @@ const updateDay = (dateStr) => {
     });
   });
 
-  // Save Trade Action (Handles both Create [POST] & Edit [PUT])
-  if (saveTradeBtn) {
-   if (saveTradeBtn) {
+  /// Save Trade Action (Handles both Create [POST] & Edit [PUT])
+if (saveTradeBtn) {
   saveTradeBtn.addEventListener('click', async (e) => {
     e.preventDefault();
 
@@ -296,7 +295,6 @@ const updateDay = (dateStr) => {
     if (!editingId) {
       clearTradeImageState();
     }
-
       const rawDate = document.getElementById('tradeDate')?.value || new Date().toISOString().split('T')[0];
       const formattedDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
 
