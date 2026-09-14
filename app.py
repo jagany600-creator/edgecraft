@@ -337,7 +337,7 @@ def create_trade():
             planned_risk=float(data.get('planned_risk', 100.0)),
             pnl=pnl,
             r_multiple=r_multiple,
-            result_status=result_status,
+            result=result_status,
             confidence_level=confidence_level,
             stress_level=stress_level,
             fomo_level=fomo_level,
