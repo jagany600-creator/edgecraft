@@ -279,76 +279,89 @@ def api_google_login():
 def create_trade():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 401
-    
-    data = request.json
-    
-    # Extract Numeric Execution Values
-    entry = float(data.get('entry_price', 0))
-    exit_p = float(data.get('exit_price', 0))
-    sl = float(data.get('stop_loss', 0))
-    tp = float(data.get('take_profit', 0))
-    lots = float(data.get('lot_size', 0))
-    direction = data.get('direction', 'Long')
-    
-    # Calculate Risk, Gain, PnL, and R-Multiple
-    risk_per_unit = abs(entry - sl)
-    gain_per_unit = (exit_p - entry) if direction == 'Long' else (entry - exit_p)
-    
-    pnl = float(data.get('pnl', gain_per_unit * lots * 100))
-    r_multiple = float(data.get('r_multiple', round(gain_per_unit / risk_per_unit, 2) if risk_per_unit > 0 else 0.0))
-    
-    if pnl > 0:
-        result_status = "Win"
-    elif pnl < 0:
-        result_status = "Loss"
-    else:
-        result_status = "Breakeven"
 
-    new_trade = Trade(
-        user_id=session['user_id'],
-        trade_date=data.get('trade_date', datetime.utcnow().strftime('%b %d, %Y')),
-        day_of_week=data.get('day_of_week', 'Sunday'),
-        symbol=data.get('symbol', 'XAUUSD'),
-        direction=direction,
-        session=data.get('session', 'New York'),
-        setup=data.get('setup', 'Break of Structure'),
-        lot_size=lots,
-        entry_time=data.get('entry_time', ''),
-        entry_price=entry,
-        stop_loss=sl,
-        take_profit=tp,
-        exit_time=data.get('exit_time', ''),
-        exit_price=exit_p,
-        risk_percent=float(data.get('risk_percent', 0.8)),
-        planned_risk=float(data.get('planned_risk', 80.0)),
-        pnl=pnl,
-        r_multiple=r_multiple,
-        result=data.get('result', result_status),
-        emotion_before=data.get('emotion_before', 'Calm'),
-        emotion_during=data.get('emotion_during', 'Focused'),
-        emotion_after=data.get('emotion_after', 'Grateful'),
-        confidence_level=int(data.get('confidence_level', 8)),
-        stress_level=int(data.get('stress_level', 3)),
-        fomo_level=int(data.get('fomo_level', 2)),
-        follow_plan=bool(data.get('follow_plan', True)),
-        exit_early=bool(data.get('exit_early', False)),
-        follow_checklist=bool(data.get('follow_checklist', True)),
-        overtraded=bool(data.get('overtraded', False)),
-        move_stop=bool(data.get('move_stop', False)),
-        revenge_trade=bool(data.get('revenge_trade', False)),
-        trade_notes=data.get('trade_notes', ''),
-        what_went_well=data.get('what_went_well', ''),
-        what_went_wrong=data.get('what_went_wrong', ''),
-        lesson_learned=data.get('lesson_learned', ''),
-        before_screenshot=data.get('before_screenshot', ''),
-        during_screenshot=data.get('during_screenshot', ''),
-        after_screenshot=data.get('after_screenshot', ''),
-        market_condition=data.get('market_condition', 'Trending')
+    try:
+        data = request.json or {}
+
+        # Extract Numeric Execution Values
+        entry = float(data.get('entry_price', 0))
+        exit_p = float(data.get('exit_price', 0))
+        sl = float(data.get('stop_loss', 0))
+        tp = float(data.get('take_profit', 0))
+        lots = float(data.get('lot_size', 0))
+        direction = data.get('direction', 'Long')
+
+        # Calculate Risk, Gain, PnL, and R-Multiple
+        risk_per_unit = abs(entry - sl)
+        gain_per_unit = (exit_p - entry) if direction == 'Long' else (entry - exit_p)
+
+        pnl = float(data.get('pnl', gain_per_unit * lots * 100))
+        r_multiple = float(data.get('r_multiple', round(gain_per_unit / risk_per_unit, 2) if risk_per_unit > 0 else 0.0))
+        result_status = "Win" if pnl > 0 else ("Loss" if pnl < 0 else "Breakeven")
+
+        # Extract psychology & metadata parameters with defaults
+        confidence_level = int(data.get('confidence_level', 8))
+        stress_level = int(data.get('stress_level', 3))
+        fomo_level = int(data.get('fomo_level', 2))
+        follow_plan = bool(data.get('follow_plan', True))
+        exit_early = bool(data.get('exit_early', False))
+        follow_checklist = bool(data.get('follow_checklist', True))
+        overtraded = bool(data.get('overtraded', False))
+        move_stop = bool(data.get('move_stop', False))
+        revenge_trade = bool(data.get('revenge_trade', False))
+
+        # Screenshots payload parsing (ensures dict/string safety)
+        screenshots_raw = data.get('screenshots', {})
+        screenshots_val = json.dumps(screenshots_raw) if isinstance(screenshots_raw, dict) else str(screenshots_raw)
+
+        new_trade = Trade(
+            user_id=session['user_id'],
+            trade_date=data.get('trade_date', ''),
+            day_of_week=data.get('day_of_week', 'Sunday'),
+            symbol=data.get('symbol', 'XAUUSD'),
+            direction=direction,
+            session=data.get('session', 'New York Open'),
+            setup=data.get('setup', '30Min S/R'),
+            market_condition=data.get('market_condition', 'Trending'),
+            lot_size=lots,
+            entry_price=entry,
+            stop_loss=sl,
+            take_profit=tp,
+            exit_price=exit_p,
+            entry_time=data.get('entry_time', ''),
+            exit_time=data.get('exit_time', ''),
+            risk_percent=float(data.get('risk_percent', 1.0)),
+            planned_risk=float(data.get('planned_risk', 100.0)),
+            pnl=pnl,
+            r_multiple=r_multiple,
+            result_status=result_status,
+            confidence_level=confidence_level,
+            stress_level=stress_level,
+            fomo_level=fomo_level,
+            follow_plan=follow_plan,
+            exit_early=exit_early,
+            follow_checklist=follow_checklist,
+            overtraded=overtraded,
+            move_stop=move_stop,
+            revenge_trade=revenge_trade,
+            trade_notes=data.get('trade_notes', ''),
+            what_went_well=data.get('what_went_well', ''),
+            what_went_wrong=data.get('what_went_wrong', ''),
+            lesson_learned=data.get('lesson_learned', ''),
+            screenshots=screenshots_val
         )
 
-    db.session.add(new_trade)
-    db.session.commit()
-    return jsonify({'status': 'success', 'message': 'Trade saved successfully!', 'id': new_trade.id}), 201
+        db.session.add(new_trade)
+        db.session.commit()
+
+        return jsonify({'status': 'success', 'message': 'Trade logged successfully!', 'id': new_trade.id}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        import traceback
+        print("--- DATABASE ERROR IN CREATE_TRADE ---")
+        traceback.print_exc()
+        return jsonify({'status': 'error', 'message': f'Server database error: {str(e)}'}), 500
 
 
 # API Endpoint to Fetch All Logged Trades for the Active User
