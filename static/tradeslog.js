@@ -288,8 +288,14 @@ const updateDay = (dateStr) => {
 
   // Save Trade Action (Handles both Create [POST] & Edit [PUT])
   if (saveTradeBtn) {
-    saveTradeBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
+   if (saveTradeBtn) {
+  saveTradeBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    // CLEAR STATE BEFORE BUILDING PAYLOAD IF NOT EDITING
+    if (!editingId) {
+      clearTradeImageState();
+    }
 
       const rawDate = document.getElementById('tradeDate')?.value || new Date().toISOString().split('T')[0];
       const formattedDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
@@ -354,6 +360,7 @@ const updateDay = (dateStr) => {
           showToast(editingId ? 'Trade updated successfully!' : 'Trade logged successfully!', 'success');
           addTradeFormView.style.display = 'none';
           tradesListView.style.display = 'block';
+          clearTradeImageState();
           fetchAndRenderTrades();
         } else {
           showToast(resData.message || 'Failed to save trade.', 'error');
@@ -615,12 +622,26 @@ document.addEventListener('DOMContentLoaded', () => {
 // Screenshot State & Overlay Handlers
 // ==========================================
 
-const tradeScreenshots = {
+let tradeScreenshots = {
   before: null,
   during: null,
   after: null
 };
 
+function clearTradeImageState() {
+  tradeScreenshots = { before: null, during: null, after: null };
+
+  const inputs = document.querySelectorAll('#beforeImageInput, #duringImageInput, #afterImageInput, input[type="file"]');
+  inputs.forEach(input => { input.value = ''; });
+
+  const cards = document.querySelectorAll('.evidence-card, .upload-box');
+  cards.forEach(card => {
+    const preview = card.querySelector('img');
+    if (preview) preview.remove();
+    const placeholder = card.querySelector('.upload-placeholder, span, p');
+    if (placeholder) placeholder.style.display = 'block';
+  });
+}
 window.handleFileSelect = function(event, type) {
   const file = event.target.files[0];
   if (!file) return;
