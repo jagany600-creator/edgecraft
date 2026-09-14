@@ -351,7 +351,9 @@ def create_trade():
             what_went_well=data.get('what_went_well', ''),
             what_went_wrong=data.get('what_went_wrong', ''),
             lesson_learned=data.get('lesson_learned', ''),
-            screenshots=screenshots_val
+            before_img=screenshots_raw.get('before'),
+            during_img=screenshots_raw.get('during'),
+            after_img=screenshots_raw.get('after')
         )
 
         db.session.add(new_trade)
