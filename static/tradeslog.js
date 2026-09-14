@@ -1,3 +1,23 @@
+// Safe Storage Wrapper to prevent Tracking Prevention runtime crashes
+const safeStorage = {
+  getItem: (key) => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.warn('Storage blocked by browser tracking prevention:', e);
+      return null;
+    }
+  },
+  setItem: (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.warn('Storage write blocked by browser tracking prevention:', e);
+    }
+  }
+};
+
+// ... your existing document.addEventListener('DOMContentLoaded', ...) code follows below ...
 document.addEventListener('DOMContentLoaded', () => {
   const openAddTradeBtn = document.getElementById('openAddTradeBtn');
   const backToTradesBtn = document.getElementById('backToTradesBtn');
