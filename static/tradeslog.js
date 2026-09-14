@@ -663,7 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Screenshot State & Overlay Handlers
 // ==========================================
 
-let tradeScreenshots = {
+ tradeScreenshots = {
   before: null,
   during: null,
   after: null
