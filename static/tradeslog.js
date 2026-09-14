@@ -306,9 +306,6 @@ const updateDay = (dateStr) => {
     });
   });
 
-  // Save Trade Action (Handles both Create [POST] & Edit [PUT])
-  saveTradeBtn = document.getElementById('saveTradeBtn') || saveTradeBtn;    
-
   if (saveTradeBtn) {
     saveTradeBtn.onclick = async function (e) {
       e.preventDefault();
