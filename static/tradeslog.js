@@ -2,25 +2,24 @@
 let editingId = null;
 let tradeScreenshots = { before: null, during: null, after: null };
 function clearTradeImageState() {
-    // 1. Reset memory variables
-    tradeScreenshots = {
-        before: null,
-        during: null,
-        after: null
-    };
+    // 1. Reset memory state
+    tradeScreenshots = { before: null, during: null, after: null };
 
-    // 2. Clear HTML preview elements, remove preview classes, and clear inputs
+    // 2. Clear UI based on tradeslog.html exact DOM IDs
     ['before', 'during', 'after'].forEach(type => {
-        const previewImg = document.getElementById(`${type}PreviewImg`);
-        const dropzone = document.getElementById(`${type}Dropzone`);
-        const fileInput = document.getElementById(`${type}Input`);
+        const imgTag = document.getElementById(`img-${type}`);
+        const previewBox = document.getElementById(`preview-box-${type}`);
+        const placeholder = document.getElementById(`placeholder-${type}`);
+        const fileInput = document.getElementById(`${type}Img`);
 
-        if (previewImg) {
-            previewImg.src = '';
-            previewImg.style.display = 'none';
+        if (imgTag) {
+            imgTag.src = '';
         }
-        if (dropzone) {
-            dropzone.classList.remove('has-image');
+        if (previewBox) {
+            previewBox.style.display = 'none';
+        }
+        if (placeholder) {
+            placeholder.style.display = 'flex'; // Shows "Click or Drag Image Here"
         }
         if (fileInput) {
             fileInput.value = '';
@@ -517,19 +516,20 @@ window.editTrade = async function(tradeId) {
         };
     }
 
-    // Display screenshots in UI
+   // Render screenshots matching HTML IDs
     ['before', 'during', 'after'].forEach(type => {
+        const imgTag = document.getElementById(`img-${type}`);
+        const previewBox = document.getElementById(`preview-box-${type}`);
+        const placeholder = document.getElementById(`placeholder-${type}`);
+
         if (tradeScreenshots[type]) {
-            const previewImg = document.getElementById(`${type}PreviewImg`);
-            const dropzone = document.getElementById(`${type}Dropzone`);
-            
-            if (previewImg) {
-                previewImg.src = tradeScreenshots[type];
-                previewImg.style.display = 'block';
-            }
-            if (dropzone) {
-                dropzone.classList.add('has-image');
-            }
+            if (imgTag) imgTag.src = tradeScreenshots[type];
+            if (previewBox) previewBox.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'none';
+        } else {
+            if (imgTag) imgTag.src = '';
+            if (previewBox) previewBox.style.display = 'none';
+            if (placeholder) placeholder.style.display = 'flex';
         }
     });
     if (trade.trade_date) {
