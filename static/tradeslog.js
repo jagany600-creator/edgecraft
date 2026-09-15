@@ -595,18 +595,19 @@ window.editTrade = async function(tradeId) {
     document.getElementById('whatWentWrong').value = trade.what_went_wrong || '';
     document.getElementById('lessonLearned').value = trade.lesson_learned || '';
 
+    // DELETE LINES 598-609:
     const loadPreview = (previewId, imgData) => {
-      const el = document.getElementById(previewId);
-      if (el && imgData) {
+    const el = document.getElementById(previewId);
+    if (el && imgData) {
         el.style.backgroundImage = `url(${imgData})`;
         el.style.backgroundSize = 'cover';
         el.style.backgroundPosition = 'center';
         el.textContent = '';
-      }
-    };
-    loadPreview('beforePreview', trade.before_screenshot);
-    loadPreview('duringPreview', trade.during_screenshot);
-    loadPreview('afterPreview', trade.after_screenshot);
+    }
+};
+loadPreview('beforePreview', trade.before_screenshot);
+loadPreview('duringPreview', trade.during_screenshot);
+loadPreview('afterPreview', trade.after_screenshot);
 
     document.getElementById('tradesListView').style.display = 'none';
     document.getElementById('addTradeFormView').style.display = 'block';
