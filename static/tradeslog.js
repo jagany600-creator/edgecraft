@@ -361,10 +361,12 @@ const updateDay = (dateStr) => {
       saveTradeBtn.style.cursor = 'not-allowed';
       saveTradeBtn.textContent = 'Saving...';
 
-      try {
-        if (typeof editingId !== 'undefined' && !editingId) {
-          if (typeof clearTradeImageState === 'function') clearTradeImageState();
-        }
+     try {
+    const editingId = document.getElementById('editingTradeId')?.value || null;
+
+    if (!editingId && typeof clearTradeImageState === 'function') {
+        clearTradeImageState();
+    }
 
         const rawDate = document.getElementById('tradeDate')?.value || new Date().toISOString().split('T')[0];
         const formattedDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
