@@ -507,14 +507,12 @@ window.editTrade = async function(tradeId) {
 
     document.getElementById('editingTradeId').value = trade.id;
     document.getElementById('formHeaderTitle').textContent = `Edit Trade (ID: ${trade.id})`;
-    // Load existing trade screenshots into memory
-    if (trade.screenshots) {
-        tradeScreenshots = {
-            before: trade.screenshots.before || null,
-            during: trade.screenshots.during || null,
-            after: trade.screenshots.after || null
-        };
-    }
+    // Load existing trade screenshots into memory (mapping direct database properties)
+    tradeScreenshots = {
+    before: trade.before_screenshot || trade.before_img || (trade.screenshots && trade.screenshots.before) || null,
+    during: trade.during_screenshot || trade.during_img || (trade.screenshots && trade.screenshots.during) || null,
+    after: trade.after_screenshot || trade.after_img || (trade.screenshots && trade.screenshots.after) || null
+};
 
    // Render screenshots matching HTML IDs
     ['before', 'during', 'after'].forEach(type => {
