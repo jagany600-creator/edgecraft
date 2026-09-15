@@ -338,8 +338,6 @@ def create_trade():
             exit_price=exit_p,
             stop_loss=sl,
             take_profit=tp,
-            risk_per_unit=risk_per_unit,
-            gain_per_unit=gain_per_unit,
             pnl=pnl,
             r_multiple=r_multiple,
             result=result_status,

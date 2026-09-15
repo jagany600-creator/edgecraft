@@ -386,7 +386,8 @@ const updateDay = (dateStr) => {
           exit_time: document.getElementById('exitTime')?.value || '',
           risk_percent: parseFloat(document.getElementById('riskPercent')?.value) || 1.0,
           planned_risk: parseFloat(document.getElementById('plannedRisk')?.value) || 100.0,
-          pnl: parseFloat(document.getElementById('pnl')?.value) || 0.0,
+          pnl: parseFloat(document.getElementById('pnlDisplay')?.value.replace(/[^0-9.-]+/g, '')) || 0.0,
+          r_multiple: parseFloat(document.getElementById('rMultipleDisplay')?.value.replace(/[^0-9.-]+/g, '')) || 0.0,
           screenshots: typeof tradeScreenshots !== 'undefined' ? tradeScreenshots : {}
         };
 
