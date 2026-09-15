@@ -2,20 +2,28 @@
 let editingId = null;
 let tradeScreenshots = { before: null, during: null, after: null };
 function clearTradeImageState() {
-    // 1. Reset global screenshot memory
-    tradeScreenshots = { before: null, during: null, after: null };
-    
-    // 2. Clear UI image previews and dropzone styles
+    // 1. Reset memory variables
+    tradeScreenshots = {
+        before: null,
+        during: null,
+        after: null
+    };
+
+    // 2. Clear HTML preview elements, remove preview classes, and clear inputs
     ['before', 'during', 'after'].forEach(type => {
         const previewImg = document.getElementById(`${type}PreviewImg`);
         const dropzone = document.getElementById(`${type}Dropzone`);
-        
+        const fileInput = document.getElementById(`${type}Input`);
+
         if (previewImg) {
             previewImg.src = '';
             previewImg.style.display = 'none';
         }
         if (dropzone) {
             dropzone.classList.remove('has-image');
+        }
+        if (fileInput) {
+            fileInput.value = '';
         }
     });
 }
