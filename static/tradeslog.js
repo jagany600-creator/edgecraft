@@ -1,6 +1,24 @@
 // Global state for trade editing and screenshots
 let editingId = null;
 let tradeScreenshots = { before: null, during: null, after: null };
+function clearTradeImageState() {
+    // 1. Reset global screenshot memory
+    tradeScreenshots = { before: null, during: null, after: null };
+    
+    // 2. Clear UI image previews and dropzone styles
+    ['before', 'during', 'after'].forEach(type => {
+        const previewImg = document.getElementById(`${type}PreviewImg`);
+        const dropzone = document.getElementById(`${type}Dropzone`);
+        
+        if (previewImg) {
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+        }
+        if (dropzone) {
+            dropzone.classList.remove('has-image');
+        }
+    });
+}
 // Compress chart screenshots before saving to prevent payload bloat (~250-350KB target)
 function compressChartImage(file) {
   return new Promise((resolve) => {
@@ -144,8 +162,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Reset Form for New Trade
-  const resetForm = () => {
+const resetForm = () => {
     if (editingTradeIdInput) editingTradeIdInput.value = '';
+    clearTradeImageState();
     if (formHeaderTitle) formHeaderTitle.textContent = 'Add New Trade';
 
     const now = new Date();
@@ -364,9 +383,7 @@ const updateDay = (dateStr) => {
      try {
     const editingId = document.getElementById('editingTradeId')?.value || null;
 
-    if (!editingId && typeof clearTradeImageState === 'function') {
-        clearTradeImageState();
-    }
+    
 
         const rawDate = document.getElementById('tradeDate')?.value || new Date().toISOString().split('T')[0];
         const formattedDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
@@ -471,6 +488,7 @@ const updateDay = (dateStr) => {
 // Edit Trade Handler
 window.editTrade = async function(tradeId) {
   try {
+    clearTradeImageState(); // <-- ADD THIS LINE HERE (Line 493)
     const response = await fetch('/api/trades');
     const trades = await response.json();
     const trade = trades.find(t => t.id === tradeId);
@@ -482,7 +500,30 @@ window.editTrade = async function(tradeId) {
 
     document.getElementById('editingTradeId').value = trade.id;
     document.getElementById('formHeaderTitle').textContent = `Edit Trade (ID: ${trade.id})`;
+    // Load existing trade screenshots into memory
+    if (trade.screenshots) {
+        tradeScreenshots = {
+            before: trade.screenshots.before || null,
+            during: trade.screenshots.during || null,
+            after: trade.screenshots.after || null
+        };
+    }
 
+    // Display screenshots in UI
+    ['before', 'during', 'after'].forEach(type => {
+        if (tradeScreenshots[type]) {
+            const previewImg = document.getElementById(`${type}PreviewImg`);
+            const dropzone = document.getElementById(`${type}Dropzone`);
+            
+            if (previewImg) {
+                previewImg.src = tradeScreenshots[type];
+                previewImg.style.display = 'block';
+            }
+            if (dropzone) {
+                dropzone.classList.add('has-image');
+            }
+        }
+    });
     if (trade.trade_date) {
       const parsedDate = new Date(trade.trade_date);
       if (!isNaN(parsedDate)) {
