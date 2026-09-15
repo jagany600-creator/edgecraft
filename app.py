@@ -287,18 +287,23 @@ def create_trade():
         data = request.json or {}
 
         # Extract Numeric Execution Values
-        entry = float(data.get('entry_price', 0))
-        exit_p = float(data.get('exit_price', 0))
-        sl = float(data.get('stop_loss', 0))
-        tp = float(data.get('take_profit', 0))
-        lots = float(data.get('lot_size', 0))
+        entry = float(data.get('entry_price') or 0)
+        exit_p = float(data.get('exit_price') or 0)
+        sl = float(data.get('stop_loss') or 0)
+        tp = float(data.get('take_profit') or 0)
+        lots = float(data.get('lot_size') or 0)
         direction = data.get('direction', 'Long')
 
         # Calculate Risk, Gain, PnL, and R-Multiple
         risk_per_unit = abs(entry - sl)
         gain_per_unit = (exit_p - entry) if direction == 'Long' else (entry - exit_p)
 
-        pnl = float(data.get('pnl', gain_per_unit * lots * 100))
+        raw_pnl = data.get('pnl')
+        if raw_pnl is not None and float(raw_pnl) != 0:
+            pnl = float(raw_pnl)
+        else:
+            pnl = round(gain_per_unit * lots * 100, 2)
+
         r_multiple = float(data.get('r_multiple', round(gain_per_unit / risk_per_unit, 2) if risk_per_unit > 0 else 0.0))
         result_status = "Win" if pnl > 0 else ("Loss" if pnl < 0 else "Breakeven")
 
@@ -313,9 +318,11 @@ def create_trade():
         move_stop = bool(data.get('move_stop', False))
         revenge_trade = bool(data.get('revenge_trade', False))
 
-        # Screenshots payload parsing (ensures dict/string safety)
+        # Extract individual screenshots
         screenshots_raw = data.get('screenshots', {})
-        screenshots_val = json.dumps(screenshots_raw) if isinstance(screenshots_raw, dict) else str(screenshots_raw)
+        before_img = screenshots_raw.get('before', '') if isinstance(screenshots_raw, dict) else ''
+        during_img = screenshots_raw.get('during', '') if isinstance(screenshots_raw, dict) else ''
+        after_img = screenshots_raw.get('after', '') if isinstance(screenshots_raw, dict) else ''
 
         new_trade = Trade(
             user_id=session['user_id'],
@@ -328,13 +335,11 @@ def create_trade():
             market_condition=data.get('market_condition', 'Trending'),
             lot_size=lots,
             entry_price=entry,
+            exit_price=exit_p,
             stop_loss=sl,
             take_profit=tp,
-            exit_price=exit_p,
-            entry_time=data.get('entry_time', ''),
-            exit_time=data.get('exit_time', ''),
-            risk_percent=float(data.get('risk_percent', 1.0)),
-            planned_risk=float(data.get('planned_risk', 100.0)),
+            risk_per_unit=risk_per_unit,
+            gain_per_unit=gain_per_unit,
             pnl=pnl,
             r_multiple=r_multiple,
             result=result_status,
@@ -351,14 +356,13 @@ def create_trade():
             what_went_well=data.get('what_went_well', ''),
             what_went_wrong=data.get('what_went_wrong', ''),
             lesson_learned=data.get('lesson_learned', ''),
-            before_screenshot=screenshots_raw.get('before'),
-            during_screenshot=screenshots_raw.get('during'),
-            after_screenshot=screenshots_raw.get('after')
+            before_screenshot=before_img,
+            during_screenshot=during_img,
+            after_screenshot=after_img
         )
 
         db.session.add(new_trade)
         db.session.commit()
-
         return jsonify({'status': 'success', 'message': 'Trade logged successfully!', 'id': new_trade.id}), 201
 
     except Exception as e:
@@ -367,7 +371,6 @@ def create_trade():
         print("--- DATABASE ERROR IN CREATE_TRADE ---")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': f'Server database error: {str(e)}'}), 500
-
 
 # API Endpoint to Fetch All Logged Trades for the Active User
 @app.route('/api/trades', methods=['GET'])
@@ -380,7 +383,7 @@ def get_trades():
 
     # Filter strictly by the currently logged-in user's ID
     current_user_id = session['user_id']
-    trades = Trade.query.filter_by(user_id=current_user_id).order_by(Trade.id.desc()).all()
+    trades = Trade.query.filter_by(user_id=current_user_id).order_by(Trade.trade_date.desc(), Trade.id.desc()).all()
 
     # Apply date range filtering if dates are provided
     if start_date_str and end_date_str:
