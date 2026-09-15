@@ -288,22 +288,32 @@ const updateDay = (dateStr) => {
     const entry = parseFloat(document.getElementById('entryPrice')?.value) || 0;
     const exit = parseFloat(document.getElementById('exitPrice')?.value) || 0;
     const lots = parseFloat(document.getElementById('lotSize')?.value) || 0;
-    const riskAmt = parseFloat(document.getElementById('plannedRisk')?.value) || 100;
+    
+    // Check both possible ID names for risk amount
+    const riskAmtInput = document.getElementById('riskAmount') || document.getElementById('plannedRisk');
+    const riskAmt = parseFloat(riskAmtInput?.value) || 0;
+    
     const direction = document.getElementById('direction')?.value || 'Long';
 
-    if (entry > 0 && exit > 0) {
-      const gainPerUnit = direction === 'Long' ? (exit - entry) : (entry - exit);
-      const pnl = gainPerUnit * lots * 100;
-      const rMultiple = riskAmt > 0 ? (pnl / riskAmt) : 0;
+    if (entry > 0 && exit > 0 && lots > 0) {
+        // Calculate raw P&L based on XAUUSD contract size (100)
+        const gainPerUnit = direction === 'Long' ? (exit - entry) : (entry - exit);
+        const pnl = gainPerUnit * lots * 100;
+        
+        // Calculate R-Multiple using actual Risk Amount
+        const rMultiple = riskAmt > 0 ? (pnl / riskAmt) : 0;
 
-      const pnlEl = document.getElementById('pnlDisplay');
-      const rEl = document.getElementById('rMultipleDisplay');
+        const pnlEl = document.getElementById('pnlDisplay');
+        const rEl = document.getElementById('rMultipleDisplay');
 
-      if (pnlEl) pnlEl.value = `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}`;
-      if (rEl) rEl.value = `${rMultiple >= 0 ? '+' : ''}${rMultiple.toFixed(2)}R`;
+        if (pnlEl) {
+            pnlEl.value = `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}`;
+        }
+        if (rEl) {
+            rEl.value = `${rMultiple >= 0 ? '+' : ''}${rMultiple.toFixed(2)}R`;
+        }
     }
-  };
-
+};
   ['entryPrice', 'exitPrice', 'stopLoss', 'lotSize', 'plannedRisk', 'direction'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
